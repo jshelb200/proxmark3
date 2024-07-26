@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\proxmark3",
+    "\\proxmark3\\armsrc",
+    "\\proxmark3\\client\\src",
+    "\\proxmark3\\include"
+  ],
+  "SelectedNode": "\\proxmark3\\armsrc\\iso14443b.h",
+  "PreviewInSolutionExplorer": false
+}

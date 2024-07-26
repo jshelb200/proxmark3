@@ -1,0 +1,18 @@
+2024-07-12 09:31:14 [37m[1m Waiting for Proxmark3 to appear on COM10[0m
+2024-07-12 09:31:15 [37m[1m Waiting 9s[0m
+2024-07-12 09:31:15 [37m[1m Waiting 8s[0m
+2024-07-12 09:31:16 [37m[1m Waiting 7s[0m
+2024-07-12 09:31:16 [37m[1m Waiting 6s[0m
+2024-07-12 09:31:17 [37m[1m Waiting 5s[0m
+2024-07-12 09:31:17 [37m[1m Waiting 4s[0m
+2024-07-12 09:31:18 [37m[1m Waiting 3s[0m
+2024-07-12 09:31:18 [37m[1m Waiting 2s[0m
+2024-07-12 09:31:19 [37m[1m Waiting 1s[0m
+2024-07-12 09:31:19 [37m[1m Waiting 0s[0m
+2024-07-12 09:31:19 [37m[1m Try the shell script `./pm3 --list` to get a list of possible serial ports[0m
+2024-07-12 09:31:36 [37m[1m Waiting for Proxmark3 to appear on COM10[0m
+2024-07-12 09:31:36 [37m[1m Proxmark3 ouvert et communication démarrée.[0m
+2024-07-12 09:33:10 [37m[1m Waiting for Proxmark3 to appear on COM10[0m
+2024-07-12 09:33:10 [37m[1m Proxmark3 ouvert et communication démarrée.[0m
+2024-07-12 09:33:40 [37m[1m Waiting for Proxmark3 to appear on COM10[0m
+2024-07-12 09:33:40 [37m[1m Proxmark3 ouvert et communication démarrée.[0m

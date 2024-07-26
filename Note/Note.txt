@@ -1,0 +1,132 @@
+Construction et Envoi d'une Commande NG PYCLIENT --> Proxmark
+## New format
+For commands being sent to the Proxmark3:
+
+    uint32_t magic;
+    uint16_t length : 15;
+    bool ng : 1;
+    uint16_t cmd;
+    uint8_t  data[length];
+    uint16_t crc;
+	
+Lors de l'envoi d'une commande NG (Next Generation), la trame de communication est structurée de manière précise pour garantir une transmission fiable et vérifiable. Voici les différentes composantes de cette trame :
+
+    Préambule (COMMANDNG_PREAMBLE_MAGIC) : 4 octets 
+        Description : Marqueur de début de la trame.
+        Valeur : 0x61334d50 (équivalent à "PM3a" en ASCII).
+        Rôle : Synchroniser et valider le début des données reçues. Assure que la réception commence correctement.
+		#define COMMANDNG_PREAMBLE_MAGIC  0x61334d50 // PM3a
+		#define COMMANDNG_POSTAMBLE_MAGIC 0x3361     // a3
+
+    Longueur des données : 1 octet
+        Description : Taille totale des données à suivre, incluant la longueur de la commande.
+        Calcul : Longueur des données + 2 octets (pour la commande).
+
+    Commande : 2 octets
+        Description : Identifiant de la commande à exécuter.
+        Exemple : CMD_PY_CLIENT avec une valeur de 0x0A06.
+        Rôle : Spécifie l'action ou la requête que le Proxmark doit exécuter.
+
+    Données : N octets
+        Description : Contenu des données spécifiques à la commande.
+        Taille : Variable, dépend de la commande et des informations à transmettre.
+        Rôle : Transmettre les informations nécessaires à l'exécution de la commande.
+
+    Checksum : 1 octet
+        Description : Somme de contrôle pour valider l'intégrité des données.
+        Calcul : XOR de tous les octets précédents dans la trame.
+        Rôle : Garantir que les données n'ont pas été altérées durant la transmission.
+
+    Postambule (COMMANDNG_POSTAMBLE_MAGIC) : 2 octets
+        Description : Marqueur de fin de la trame.
+        Valeur : 0x3361 (équivalent à "a3" en ASCII).
+        Rôle : Indiquer la fin de la trame et valider que toutes les données ont été reçues correctement.
+
+Exemple de Trame de Commande NG
+
+Prenons un exemple où nous envoyons une commande CMD_PY_CLIENT avec des données spécifiques. Voici comment la trame serait construite :
+
+    Préambule : 0x61334d50
+    Longueur des données : 1 octet (supposons que la longueur des données est de 4 octets, donc 6 = 4 (données) + 2 (commande))
+    Commande : 0x0A06 (représenté en deux octets : 0x0A et 0x06)
+    Données : 0x01 0x02 0x03 0x04 (4 octets de données)
+    Checksum : Calculé par XOR de tous les octets précédents.
+    Postambule : 0x3361
+	
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+For responses from the Proxmark3:
+
+    uint32_t magic;
+    uint16_t length : 15;
+    bool ng : 1;
+    int16_t  status;
+    uint16_t cmd;
+    uint8_t  data[length];
+    uint16_t crc;
+
+* `magic`:  arbitrary magic (`PM3b`) to help re-sync if needed
+* `length`: length of the variable payload, 0 if none, max 512 (PM3_CMD_DATA_SIZE) for now.
+* `ng`:     flag to tell if the data is following the new format (ng) or the old one, see transition notes below
+* `status`: a field to send back the status of the command execution
+* `cmd`:    as previously, on 16b as it's enough
+* `data`:   variable length payload
+* `crc`:    either an actual CRC (crc14a) or a Magic placeholder (`a3`)
+
+We used to send an anonymous ACK, now we're replying with the corresponding command name and a status.
+CRC is optional and on reception, the magic `a3` is accepted as placeholder. If it's different then it's checked as a CRC.
+By default CRC is user over USART and is disabled over USB, on both directions.
+
+Internal structures used to handle these packets are:
+* PacketCommandNGPreamble
+* PacketCommandNGPostamble
+* PacketCommandNGRaw
+* PacketResponseNGPreamble
+* PacketResponseNGPostamble
+* PacketResponseNGRaw
+
+Décomposition d'un packet de commade Paquet USB : Client --> PM3
+
+Le paquet est 504d3361 02 80 040a10006133 [scard check -p 1000]  
+
+    Preamble: 504d3361
+        50 4d 33 61 corresponds to PM3a
+
+    Length (1 byte): 02
+        La longueur des données qui suivent, en bytes.
+
+    Unknown Byte (1 byte): 80
+        Cet octet pourrait représenter un drapeau ou une autre information spécifique.
+
+    Command (2 bytes): 040a
+        La commande spécifique envoyée au Proxmark.
+
+    Data (2 bytes): 1000
+        Les données associées à la commande.
+
+    Postamble: 6133
+        61 33 corresponds to a3
+
+Analyse du Paquet
+
+    Preamble (4 bytes): 504d3361
+        Magic value indiquant le début du paquet.
+
+    Length (1 byte): 02
+        Indique que 2 bytes de données suivent la commande.
+
+    Unknown Byte (1 byte): 80
+        Pourrait représenter un drapeau ou une autre information. Il pourrait également faire partie de la structure de l'en-tête.
+
+    Command (2 bytes): 040a
+        La commande envoyée, ici elle est 0x040A.
+
+    Data (2 bytes): 1000
+        Les données de la commande, ici elles sont 0x1000.
+
+    Postamble (2 bytes): 6133
+        Magic value indiquant la fin du paquet.
+		
+Decomposition d'un packet de donnée : PY_CLIENT --> PM3
+
+
+50796d33    0a 010200783033007830346133 //
