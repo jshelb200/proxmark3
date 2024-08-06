@@ -4,6 +4,7 @@ import threading
 import argparse
 from pm3_cmd import CMD_PY_CLIENT
 from utils import Debug, stylized_banner, pycli_print, bytes_to_hex_string 
+from colorama import init, Fore, Style
 import struct
 import sys
 import queue
@@ -156,7 +157,7 @@ def main():
     port = 'COM10'
     speed = 115200
     timeout = 10
-    banner = f"Connecting to port: {port}\nWaiting for Proxmark3 to appear on {port}"
+    banner = stylized_banner({port})
     print(banner)
 
     global debug
@@ -175,14 +176,14 @@ def main():
             print("Envoi de la commande CMD_PY_CLIENT_SIM...")
             command_data = b'\x00\x00\x00\x00'
             send_command(proxmark_device.serial_port, CMD_PY_CLIENT_SIM, command_data)
-            print(Reader)
+            # print(Reader)
 
             # Emulation loop
             while proxmark_device.run:
                 try:
                     receivedCmd = received_queue.get_nowait() 
                     if receivedCmd == Reader:
-                        print("#### Init OK ####")
+                        print (f"\n{Fore.GREEN}## Init OK ##{Style.RESET_ALL}\n")
                         print(f"C-APDU: {receivedCmd}")
                         #pm =input("R-APDU:")
                         #print(f"R-APDU: {pm}")

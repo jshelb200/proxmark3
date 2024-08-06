@@ -246,7 +246,7 @@ void handlePyClientSim(uint8_t* pupi) {
     /*
     l'objectif de cette fonction est de simuler une carte calypso avec un script python.
      On va donc envoyer les commandes du lecteur au client python et attendre la reponse
-     Mais avant il faut initialiser la communication avec la carte en repondant aux 
+     Avant il faut initialiser la communication avec la carte en repondant aux 
      commandes WUPB, REQB, ATTRIB, HALT.. le WTX ne fonctionnant qu'avec les cmd de BLOC I
     */ 
 
@@ -560,7 +560,7 @@ void handlePyClientSim(uint8_t* pupi) {
         ++cmdsReceived;
         // Ici je fais une sorte de pause.. Necessaire pour que le lecteur puisse traiter la reponse sinon c'est trop rapide 
         // Attention a ne pas toucher a cette valeur. 700 microsecondes est le temps necessaire pour que le lecteur puisse traiter la reponse
-        WaitUS(100);
+        WaitUS(500);
     }
     switch_off();
     if (g_dbglevel >= DBG_DEBUG) {

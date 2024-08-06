@@ -1,0 +1,1123 @@
+<?xml version="1.0" type="UTF-8"?>
+<cardpeek>
+  <version>0.8.4-win32</version>
+  <node>
+    <attr name="classname">card</attr>
+    <attr name="label">CALYPSO</attr>
+    <node>
+      <attr name="classname">atr</attr>
+      <attr name="label">cold ATR</attr>
+      <attr name="size">13</attr>
+      <attr name="val" encoding="bytes">8:3B888001000000000071710009</attr>
+      <node>
+        <attr name="classname">item</attr>
+        <attr name="label">Possibly identified card</attr>
+        <attr name="val">OPUS Public Transport card (Montreal, Quebec, Canada) - Oberthur based
+  http://carteopus.info/
+  ACTV (Italy) transport card (RFID)</attr>
+      </node>
+      <node>
+        <attr name="classname">item</attr>
+        <attr name="label">card number</attr>
+        <attr name="size">4</attr>
+        <attr name="val" encoding="bytes">8:00000071</attr>
+        <attr name="alt">113</attr>
+      </node>
+    </node>
+    <node>
+      <attr name="classname">file</attr>
+      <attr name="label">AID</attr>
+      <attr name="id">3F04</attr>
+      <node>
+        <attr name="classname">header</attr>
+        <attr name="label">answer to select</attr>
+        <attr name="size">25</attr>
+        <attr name="val" encoding="bytes">8:851704040210011F1200000101010100000000000000000000</attr>
+      </node>
+      <node>
+        <attr name="classname">record</attr>
+        <attr name="label">record</attr>
+        <attr name="id">1</attr>
+        <attr name="size">16</attr>
+        <attr name="val" encoding="bytes">8:334D54522E4943410000000000000000</attr>
+      </node>
+    </node>
+    <node>
+      <attr name="classname">file</attr>
+      <attr name="label">ICC</attr>
+      <attr name="id">0002</attr>
+      <node>
+        <attr name="classname">header</attr>
+        <attr name="label">answer to select</attr>
+        <attr name="size">25</attr>
+        <attr name="val" encoding="bytes">8:85170204021D011F0000000101010100000000000000000000</attr>
+      </node>
+      <node>
+        <attr name="classname">record</attr>
+        <attr name="label">record</attr>
+        <attr name="id">1</attr>
+        <attr name="size">29</attr>
+        <attr name="val" encoding="bytes">8:00000000000000040071004200000000C3F70BF702501400012CA73A00</attr>
+      </node>
+    </node>
+    <node>
+      <attr name="classname">file</attr>
+      <attr name="label">ID</attr>
+      <attr name="id">0003</attr>
+      <node>
+        <attr name="classname">header</attr>
+        <attr name="label">answer to select</attr>
+        <attr name="size">25</attr>
+        <attr name="val" encoding="bytes">8:85170304021D01011200000102010100000000000000000000</attr>
+      </node>
+    </node>
+    <node>
+      <attr name="classname">file</attr>
+      <attr name="label">Display / Free</attr>
+      <attr name="id">2F10</attr>
+      <node>
+        <attr name="classname">header</attr>
+        <attr name="label">answer to select</attr>
+        <attr name="size">25</attr>
+        <attr name="val" encoding="bytes">8:85170504021D021F1F1F000101010100000000000000000000</attr>
+      </node>
+      <node>
+        <attr name="classname">record</attr>
+        <attr name="label">record</attr>
+        <attr name="id">1</attr>
+        <attr name="size">29</attr>
+        <attr name="val" encoding="bytes">8:0000000000000000000000000000000000000000000000000000000000</attr>
+      </node>
+      <node>
+        <attr name="classname">record</attr>
+        <attr name="label">record</attr>
+        <attr name="id">2</attr>
+        <attr name="size">29</attr>
+        <attr name="val" encoding="bytes">8:0000000000000000000000000000000000000000000000000000000000</attr>
+      </node>
+    </node>
+    <node>
+      <attr name="classname">folder</attr>
+      <attr name="label">Ticketing</attr>
+      <attr name="id">2000</attr>
+      <node>
+        <attr name="classname">header</attr>
+        <attr name="label">answer to select</attr>
+        <attr name="size">25</attr>
+        <attr name="val" encoding="bytes">8:85170002000000121200000103010100151515000000000000</attr>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">AID</attr>
+        <attr name="id">2004</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:851704040210011F1200000101010100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">16</attr>
+          <attr name="val" encoding="bytes">8:A0000004040125090101000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Environment</attr>
+        <attr name="id">2001</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170704021D011F1200000101010100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:24B9284808063B10B4700013C280000000000000000000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EnvVersionNumber</attr>
+            <attr name="size">6</attr>
+            <attr name="val">001001</attr>
+            <attr name="alt">0x09</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Env</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(EnvBitmap)</attr>
+              <attr name="val">0010111</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EnvNetworkId</attr>
+              <attr name="size">24</attr>
+              <attr name="val">001001010000100100000001</attr>
+              <attr name="alt">country France, French Republic / network 901</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EnvApplicationIssuerId</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000000</attr>
+              <attr name="alt">0x00</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EnvApplicationValidityEndDate</attr>
+              <attr name="size">14</attr>
+              <attr name="val">11000111011000</attr>
+              <attr name="alt">mar. 09/12/2031</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EnvAuthenticator</attr>
+              <attr name="size">16</attr>
+              <attr name="val">1000010110100011</attr>
+              <attr name="alt">0x85A3</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Holder</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(HolderBitmap)</attr>
+              <attr name="val">10000000</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">HolderData</attr>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">(HolderDataBitmap)</attr>
+                <attr name="val">000000001001</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">HolderDataCardStatus</attr>
+                <attr name="size">4</attr>
+                <attr name="val">1110</attr>
+                <attr name="alt">0x0E</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">HolderDataCommercialID</attr>
+                <attr name="size">6</attr>
+                <attr name="val">000101</attr>
+                <attr name="alt">0x05</attr>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Event logs</attr>
+        <attr name="id">2010</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170804041D031F1212120103030300000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:9BD50B900368A0881800199B480638001098C040000000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventDate</attr>
+            <attr name="size">14</attr>
+            <attr name="val">10011011110101</attr>
+            <attr name="alt">lun. 22/04/2024</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventTime</attr>
+            <attr name="size">11</attr>
+            <attr name="val">01000010111</attr>
+            <attr name="alt">09:55:00</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Event</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(EventBitmap)</attr>
+              <attr name="val">0010000000000110110100010100</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventCode</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00010001</attr>
+              <attr name="alt">Urban Bus - Entry</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventServiceProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000011</attr>
+              <attr name="alt">RATP</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventLocationId</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000000011</attr>
+              <attr name="alt">0x0003</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventDevice</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0011001101101001</attr>
+              <attr name="alt">0x3369</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventRouteNumber</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000011000111</attr>
+              <attr name="alt">199</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventJourneyRun</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000000010</attr>
+              <attr name="alt">0x0002</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventVehiculeId</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0001001100011000</attr>
+              <attr name="alt">0x1318</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventContractPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">2</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:9BD509900068A290192310983000904000000000000000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventDate</attr>
+            <attr name="size">14</attr>
+            <attr name="val">10011011110101</attr>
+            <attr name="alt">lun. 22/04/2024</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventTime</attr>
+            <attr name="size">11</attr>
+            <attr name="val">01000010011</attr>
+            <attr name="alt">09:51:00</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Event</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(EventBitmap)</attr>
+              <attr name="val">0010000000000000110100010100</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventCode</attr>
+              <attr name="size">8</attr>
+              <attr name="val">01010010</attr>
+              <attr name="alt">Train - Exit</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventServiceProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000011</attr>
+              <attr name="alt">RATP</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventLocationId</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0010010001100010</attr>
+              <attr name="alt">secteur 18 - station Massy-Palaiseau|Massy-Verrières</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventDevice</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0001001100000110</attr>
+              <attr name="alt">0x1306</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventRouteNumber</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000010010</attr>
+              <attr name="alt">18</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventContractPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">3</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:9BD4FE900068A2881923088A1000904000000000000000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventDate</attr>
+            <attr name="size">14</attr>
+            <attr name="val">10011011110101</attr>
+            <attr name="alt">lun. 22/04/2024</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventTime</attr>
+            <attr name="size">11</attr>
+            <attr name="val">00111111101</attr>
+            <attr name="alt">09:29:00</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Event</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(EventBitmap)</attr>
+              <attr name="val">0010000000000000110100010100</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventCode</attr>
+              <attr name="size">8</attr>
+              <attr name="val">01010001</attr>
+              <attr name="alt">Train - Entry</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventServiceProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000011</attr>
+              <attr name="alt">RATP</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventLocationId</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0010010001100001</attr>
+              <attr name="alt">secteur 18 - station Massy-Palaiseau|Massy-Verrières</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventDevice</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0001000101000010</attr>
+              <attr name="alt">0x1142</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventRouteNumber</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000010010</attr>
+              <attr name="alt">18</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventContractPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Contracts</attr>
+        <attr name="id">2020</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170904021D041F1212000102030100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:5A00E00000513E8443122CD0B3F90FECD0C06D9900200D400000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">01011010000000001110</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000000</attr>
+              <attr name="alt">0x00</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractTariff</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000000101</attr>
+              <attr name="alt">0x0005</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractSerialNumber</attr>
+              <attr name="size">32</attr>
+              <attr name="val">00010011111010000100010000110001</attr>
+              <attr name="alt">0x13E84431</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractContractValidityInfo</attr>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">(ContractContractValidityInfoBitmap)</attr>
+                <attr name="val">001000101</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractStartDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10011010000101</attr>
+                <attr name="alt">lun. 01/01/2024</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractEndDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10011111110010</attr>
+                <attr name="alt">mar. 31/12/2024</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractZones</attr>
+                <attr name="size">8</attr>
+                <attr name="val">00011111</attr>
+                <attr name="alt">1-5</attr>
+              </node>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractContractSaleData</attr>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">(ContractContractSaleDataBitmap)</attr>
+                <attr name="val">1101</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10011010000110</attr>
+                <attr name="alt">mar. 02/01/2024</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractAgent</attr>
+                <attr name="size">8</attr>
+                <attr name="val">00000011</attr>
+                <attr name="alt">0x03</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractDevice</attr>
+                <attr name="size">16</attr>
+                <attr name="val">0110110011001000</attr>
+                <attr name="alt">0x6CC8</attr>
+              </node>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractStatus</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractAuthenticator</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000001101010</attr>
+              <attr name="alt">0x006A</attr>
+            </node>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">2</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:5A506000001060177045946651F1FD946007F8000401AC000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">01011010010100000110</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000000</attr>
+              <attr name="alt">0x00</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractTariff</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000000001</attr>
+              <attr name="alt">0x0001</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractPayMethod</attr>
+              <attr name="size">11</attr>
+              <attr name="val">00000110000</attr>
+              <attr name="alt">0x0030</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractPriceAmount</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000101110111000</attr>
+              <attr name="alt">30,00€</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractContractValidityInfo</attr>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">(ContractContractValidityInfoBitmap)</attr>
+                <attr name="val">001000101</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractStartDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10010100011001</attr>
+                <attr name="alt">lun. 02/01/2023</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractEndDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10010100011111</attr>
+                <attr name="alt">dim. 08/01/2023</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractZones</attr>
+                <attr name="size">8</attr>
+                <attr name="val">00011111</attr>
+                <attr name="alt">1-5</attr>
+              </node>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractContractSaleData</attr>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">(ContractContractSaleDataBitmap)</attr>
+                <attr name="val">1101</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractDate</attr>
+                <attr name="size">14</attr>
+                <attr name="val">10010100011000</attr>
+                <attr name="alt">dim. 01/01/2023</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractAgent</attr>
+                <attr name="size">8</attr>
+                <attr name="val">00000001</attr>
+                <attr name="alt">0x01</attr>
+              </node>
+              <node>
+                <attr name="classname">item</attr>
+                <attr name="label">ContractDevice</attr>
+                <attr name="size">16</attr>
+                <attr name="val">1111111000000000</attr>
+                <attr name="alt">0xFE00</attr>
+              </node>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractStatus</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">ContractAuthenticator</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000001101011</attr>
+              <attr name="alt">0x006B</attr>
+            </node>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">3</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">4</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Contracts</attr>
+        <attr name="id">2030</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170604021D041F1212000102030100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">2</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">3</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">4</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Contract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(ContractBitmap)</attr>
+              <attr name="val">00000000000000000000</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Counters</attr>
+        <attr name="id">202A</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170A04081D011F1212120102030200000000000000FFFFFF</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000FFFFFF000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Counters</attr>
+        <attr name="id">202B</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170B04081D011F1212120102030200000000000000FFFFFF</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000FFFFFF000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Counters</attr>
+        <attr name="id">202C</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170C04081D011F1212120102030200000000000000FFFFFF</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000FFFFFF000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Counters</attr>
+        <attr name="id">202D</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85170D04081D011F1212120102030200000000000000FFFFFF</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000FFFFFF000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Counters</attr>
+        <attr name="id">2069</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85171904091D011F1212120102030200000000000000FFFFFF</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000000000000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Special events</attr>
+        <attr name="id">2040</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85171D04021D031F1200000103010100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:9A1905100068E289A81923088A1000904088B8F0400000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventDate</attr>
+            <attr name="size">14</attr>
+            <attr name="val">10011010000110</attr>
+            <attr name="alt">mar. 02/01/2024</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">EventTime</attr>
+            <attr name="size">11</attr>
+            <attr name="val">01000001010</attr>
+            <attr name="alt">08:42:00</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">Event</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(EventBitmap)</attr>
+              <attr name="val">0010000000000000110100011100</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventCode</attr>
+              <attr name="size">8</attr>
+              <attr name="val">01010001</attr>
+              <attr name="alt">Train - Entry</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventResult</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00110101</attr>
+              <attr name="alt">0x35</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventServiceProvider</attr>
+              <attr name="size">8</attr>
+              <attr name="val">00000011</attr>
+              <attr name="alt">RATP</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventLocationId</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0010010001100001</attr>
+              <attr name="alt">secteur 18 - station Massy-Palaiseau|Massy-Verrières</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventDevice</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0001000101000010</attr>
+              <attr name="alt">0x1142</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventRouteNumber</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000000000010010</attr>
+              <attr name="alt">18</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">EventContractPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">(remaining unparsed data)</attr>
+            <attr name="val">000000100010001011100011110000010000000000000000000000000000000000000000000000000000000000000000000000</attr>
+            <attr name="alt">(binary data)</attr>
+          </node>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">2</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000000000000000000000000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">3</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:0000000000000000000000000000000000000000000000000000000000</attr>
+        </node>
+      </node>
+      <node>
+        <attr name="classname">file</attr>
+        <attr name="label">Contract list</attr>
+        <attr name="id">2050</attr>
+        <attr name="parsed">true</attr>
+        <node>
+          <attr name="classname">header</attr>
+          <attr name="label">answer to select</attr>
+          <attr name="size">25</attr>
+          <attr name="val" encoding="bytes">8:85171E04021D011F1200000103010100000000000000000000</attr>
+        </node>
+        <node>
+          <attr name="classname">record</attr>
+          <attr name="label">record</attr>
+          <attr name="id">1</attr>
+          <attr name="size">29</attr>
+          <attr name="val" encoding="bytes">8:2C1FF21C1FFE2000000000000000000000000000000000000000000000</attr>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">BestContractCount</attr>
+            <attr name="val">0010</attr>
+            <attr name="alt">2</attr>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">BestContract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(BestContractBitmap)</attr>
+              <attr name="val">110</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">BestContractsTariff</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000111111111001</attr>
+              <attr name="alt">0x0FF9</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">BestContractsPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00001</attr>
+              <attr name="alt">0x01</attr>
+            </node>
+          </node>
+          <node>
+            <attr name="classname">item</attr>
+            <attr name="label">BestContract</attr>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">(BestContractBitmap)</attr>
+              <attr name="val">110</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">BestContractsTariff</attr>
+              <attr name="size">16</attr>
+              <attr name="val">0000111111111111</attr>
+              <attr name="alt">0x0FFF</attr>
+            </node>
+            <node>
+              <attr name="classname">item</attr>
+              <attr name="label">BestContractsPointer</attr>
+              <attr name="size">5</attr>
+              <attr name="val">00010</attr>
+              <attr name="alt">0x02</attr>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</cardpeek>
