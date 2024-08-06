@@ -3,3 +3,6 @@ proxspace/
 
 #Vs Code
 .vs/
+
+#Log
+logs/log.txt
