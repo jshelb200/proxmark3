@@ -4,7 +4,6 @@ proxspace/
 #Vs Code
 .vs/
 
-<<<<<<< HEAD
 #Log
 logs/log.txt
 =======
@@ -93,4 +92,3 @@ fpga_version_info.c
 # local codeql
 _codeql*
 /codeql
->>>>>>> 11c1c8490cd97a9f0ddcad1b8562520123e7431a
