@@ -430,7 +430,7 @@ static void *sorttable(void *dd) {
                 printf("cannot create outfile %s\n", outfile);
                 exit(1);
             }
-            if (write(fdout, table, numentries * DATASIZE) != (numentries * DATASIZE)) {
+            if (write(fdout, table, numentries * DATASIZE)) {
                 printf("writetable cannot write all of the data\n");
                 exit(1);
             }
@@ -454,7 +454,7 @@ int main(int argc, char *argv[]) {
     // make the table of tables
     t = (struct table *)calloc(sizeof(struct table) * 65536, sizeof(uint8_t));
     if (!t) {
-        printf("calloc failed\n");
+        printf("malloc failed\n");
         exit(1);
     }
 
@@ -503,7 +503,10 @@ int main(int argc, char *argv[]) {
     free_tables(t);
     free(t);
 
+
+
     // now for the sorting
+
 
     // start the threads
     for (long i = 0; i < NUM_SORT_THREADS; i++) {

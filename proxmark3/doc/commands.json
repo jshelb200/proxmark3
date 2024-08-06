@@ -189,9 +189,9 @@
             "options": [
                 "-h, --help This help",
                 "-d <hex> ASN1 encoded byte array",
-                "--test perform self tests"
+                "-t, --test perform self test"
             ],
-            "usage": "data asn1 [-h] [-d <hex>] [--test]"
+            "usage": "data asn1 [-ht] [-d <hex>]"
         },
         "data atr": {
             "command": "data atr",
@@ -3163,8 +3163,7 @@
             "description": "Checkkeys loads a dictionary text file with 8byte hex keys to test authenticating against a iClass tag",
             "notes": [
                 "hf iclass chk -f iclass_default_keys.dic",
-                "hf iclass chk -f iclass_elite_keys.dic --elite",
-                "hf iclass chk --vb6kdf"
+                "hf iclass chk -f iclass_elite_keys.dic --elite"
             ],
             "offline": false,
             "options": [
@@ -3173,10 +3172,9 @@
                 "--credit key is assumed to be the credit key",
                 "--elite elite computations applied to key",
                 "--raw no computations applied to key (raw)",
-                "--shallow use shallow (ASK) reader modulation instead of OOK",
-                "--vb6kdf use the VB6 elite KDF instead of a file"
+                "--shallow use shallow (ASK) reader modulation instead of OOK"
             ],
-            "usage": "hf iclass chk [-h] [-f <fn>] [--credit] [--elite] [--raw] [--shallow] [--vb6kdf]"
+            "usage": "hf iclass chk [-h] -f <fn> [--credit] [--elite] [--raw] [--shallow]"
         },
         "hf iclass configcard": {
             "command": "hf iclass configcard",
@@ -3234,10 +3232,9 @@
                 "-k, --key <hex> 3DES transport key",
                 "-v, --verbose verbose output",
                 "--d6 decode as block 6",
-                "-z, --dense dense dump output style",
-                "--ns no save to file"
+                "-z, --dense dense dump output style"
             ],
-            "usage": "hf iclass decrypt [-hvz] [-f <fn>] [-d <hex>] [-k <hex>] [--d6] [--ns]"
+            "usage": "hf iclass decrypt [-hvz] [-f <fn>] [-d <hex>] [-k <hex>] [--d6]"
         },
         "hf iclass dump": {
             "command": "hf iclass dump",
@@ -3373,7 +3370,7 @@
         },
         "hf iclass help": {
             "command": "hf iclass help",
-            "description": "help This help list List iclass history view Display content from tag dump file ----------- --------------------- Recovery -------------------- loclass Use loclass to perform bruteforce reader attack lookup Uses authentication trace to check for key in dictionary file legbrute Bruteforces 40 bits of a partial raw key ----------- ---------------------- Utils ---------------------- calcnewkey Calc diversified keys (blocks 3 & 4) to write new keys encode Encode binary wiegand to block 7 encrypt Encrypt given block data decrypt Decrypt given block data or tag dump file managekeys Manage keys to use with iclass commands permutekey Permute function from 'heart of darkness' paper --------------------------------------------------------------------------------------- hf iclass list available offline: yes Alias of `trace list -t iclass -c` with selected protocol data to annotate trace buffer You can load a trace from file (see `trace load -h`) or it be downloaded from device by default It accepts all other arguments of `trace list`. Note that some might not be relevant for this specific protocol",
+            "description": "help This help list List iclass history view Display content from tag dump file ----------- --------------------- Recovery -------------------- loclass Use loclass to perform bruteforce reader attack lookup Uses authentication trace to check for key in dictionary file ----------- ---------------------- Utils ---------------------- calcnewkey Calc diversified keys (blocks 3 & 4) to write new keys encode Encode binary wiegand to block 7 encrypt Encrypt given block data decrypt Decrypt given block data or tag dump file managekeys Manage keys to use with iclass commands permutekey Permute function from 'heart of darkness' paper --------------------------------------------------------------------------------------- hf iclass list available offline: yes Alias of `trace list -t iclass -c` with selected protocol data to annotate trace buffer You can load a trace from file (see `trace load -h`) or it be downloaded from device by default It accepts all other arguments of `trace list`. Note that some might not be relevant for this specific protocol",
             "notes": [
                 "hf iclass list --frame -> show frame delay times",
                 "hf iclass list -1 -> use trace buffer"
@@ -3405,35 +3402,6 @@
             ],
             "usage": "hf iclass info [-h] [--shallow]"
         },
-        "hf iclass legbrute": {
-            "command": "hf iclass legbrute",
-            "description": "This command take sniffed trace data and partial raw key and bruteforces the remaining 40 bits of the raw key.",
-            "notes": [
-                "hf iclass legbrute --csn 8D7BD711FEFF12E0 --epurse feffffffffffffff --macs 00000000BD478F76 --pk B4F12AADC5301225"
-            ],
-            "offline": true,
-            "options": [
-                "-h, --help This help",
-                "--csn <hex> Specify CSN as 8 hex bytes",
-                "--epurse <hex> Specify ePurse as 8 hex bytes",
-                "--macs <hex> MACs",
-                "--pk <hex> Partial Key"
-            ],
-            "usage": "hf iclass legbrute [-h] --csn <hex> --epurse <hex> --macs <hex> --pk <hex>"
-        },
-        "hf iclass legrec": {
-            "command": "hf iclass legrec",
-            "description": "Attempts to recover the diversified key of a specific iClass card. This may take a long time. The Card must remain be on the PM3 antenna during the whole process! This process may brick the card!",
-            "notes": [
-                "hf iclass legrec --macs 0000000089cb984b"
-            ],
-            "offline": false,
-            "options": [
-                "-h, --help This help",
-                "--macs <hex> MACs"
-            ],
-            "usage": "hf iclass legrec [-h] --macs <hex>"
-        },
         "hf iclass loclass": {
             "command": "hf iclass loclass",
             "description": "Execute the offline part of loclass attack An iclass dumpfile is assumed to consist of an arbitrary number of malicious CSNs, and their protocol responses The binary format of the file is expected to be as follows: <8 byte CSN><8 byte CC><4 byte NR><4 byte MAC> <8 byte CSN><8 byte CC><4 byte NR><4 byte MAC> <8 byte CSN><8 byte CC><4 byte NR><4 byte MAC> ... totalling N*24 bytes",
@@ -3455,8 +3423,7 @@
             "description": "This command take sniffed trace data and try to recovery a iCLASS Standard or iCLASS Elite key.",
             "notes": [
                 "hf iclass lookup --csn 9655a400f8ff12e0 --epurse f0ffffffffffffff --macs 0000000089cb984b -f iclass_default_keys.dic",
-                "hf iclass lookup --csn 9655a400f8ff12e0 --epurse f0ffffffffffffff --macs 0000000089cb984b -f iclass_default_keys.dic --elite",
-                "hf iclass lookup --csn 9655a400f8ff12e0 --epurse f0ffffffffffffff --macs 0000000089cb984b --vb6rng"
+                "hf iclass lookup --csn 9655a400f8ff12e0 --epurse f0ffffffffffffff --macs 0000000089cb984b -f iclass_default_keys.dic --elite"
             ],
             "offline": true,
             "options": [
@@ -3466,10 +3433,9 @@
                 "--epurse <hex> Specify ePurse as 8 hex bytes",
                 "--macs <hex> MACs",
                 "--elite Elite computations applied to key",
-                "--raw no computations applied to key",
-                "--vb6rng use the VB6 rng for elite keys instead of a dictionary file"
+                "--raw no computations applied to key"
             ],
-            "usage": "hf iclass lookup [-h] [-f <fn>] --csn <hex> --epurse <hex> --macs <hex> [--elite] [--raw] [--vb6rng]"
+            "usage": "hf iclass lookup [-h] -f <fn> --csn <hex> --epurse <hex> --macs <hex> [--elite] [--raw]"
         },
         "hf iclass managekeys": {
             "command": "hf iclass managekeys",
@@ -4700,12 +4666,9 @@
                 "--emu Fill simulator keys from found keys",
                 "--dump Dump found keys to binary file",
                 "--mem Use dictionary from flashmemory",
-                "-f, --file <fn> filename of dictionary",
-                "--blk <dec> block number (single block recovery mode)",
-                "-a single block recovery key A",
-                "-b single block recovery key B"
+                "-f, --file <fn> filename of dictionary"
             ],
-            "usage": "hf mf fchk [-hab] [-k <hex>]... [--mini] [--1k] [--2k] [--4k] [--emu] [--dump] [--mem] [-f <fn>] [--blk <dec>]"
+            "usage": "hf mf fchk [-h] [-k <hex>]... [--mini] [--1k] [--2k] [--4k] [--emu] [--dump] [--mem] [-f <fn>]"
         },
         "hf mf gchpwd": {
             "command": "hf mf gchpwd",
@@ -5019,39 +4982,6 @@
             ],
             "usage": "hf mf info [-habnv] [--blk <dec>] [-k <hex>]"
         },
-        "hf mf isen": {
-            "command": "hf mf isen",
-            "description": "Information about Static Encrypted Nonce properties in a MIFARE Classic card",
-            "notes": [
-                "hf mf isen",
-                "Default behavior:",
-                "auth(blk)-auth(blk2)-auth(blk2)-...",
-                "Default behavior when wrong key2:",
-                "auth(blk)-auth(blk2) auth(blk)-auth(blk2) ..."
-            ],
-            "offline": false,
-            "options": [
-                "-h, --help This help",
-                "--blk <dec> block number",
-                "-a input key type is key A (def)",
-                "-b input key type is key B",
-                "-c <dec> input key type is key A + offset",
-                "-k, --key <hex> key, 6 hex bytes",
-                "--blk2 <dec> nested block number (default=same)",
-                "--a2 nested input key type is key A (default=same)",
-                "--b2 nested input key type is key B (default=same)",
-                "--c2 <dec> nested input key type is key A + offset",
-                "--key2 <hex> nested key, 6 hex bytes (default=same)",
-                "-n <dec> number of nonces (default=2)",
-                "--reset reset between attempts, even if auth was successful",
-                "--addread auth(blk)-read(blk)-auth(blk2)",
-                "--addauth auth(blk)-auth(blk)-auth(blk2)",
-                "--incblk2 auth(blk)-auth(blk2)-auth(blk2+4)-...",
-                "--corruptnrar corrupt {nR}{aR}, but with correct parity",
-                "--corruptnrarparity correct {nR}{aR}, but with corrupted parity"
-            ],
-            "usage": "hf mf isen [-hab] [--blk <dec>] [-c <dec>] [-k <hex>] [--blk2 <dec>] [--a2] [--b2] [--c2 <dec>] [--key2 <hex>] [-n <dec>] [--reset] [--addread] [--addauth] [--incblk2] [--corruptnrar] [--corruptnrarparity]"
-        },
         "hf mf mad": {
             "command": "hf mf mad",
             "description": "Checks and prints MIFARE Application Directory (MAD)",
@@ -5168,17 +5098,14 @@
                 "--blk <dec> Input block number",
                 "-a Input key specified is A key (default)",
                 "-b Input key specified is B key",
-                "-c <dec> input key type is key A + offset",
                 "--tblk <dec> Target block number",
                 "--ta Target A key (default)",
                 "--tb Target B key",
-                "--tc <dec> Nested input key type is key A + offset (you must specify a single block as well!)",
                 "--emu Fill simulator keys from found keys",
                 "--dump Dump found keys to file",
-                "--mem Use dictionary from flashmemory",
-                "-i Ignore static encrypted nonces"
+                "--mem Use dictionary from flashmemory"
             ],
-            "usage": "hf mf nested [-habi] [-k <hex>] [--mini] [--1k] [--2k] [--4k] [--blk <dec>] [-c <dec>] [--tblk <dec>] [--ta] [--tb] [--tc <dec>] [--emu] [--dump] [--mem]"
+            "usage": "hf mf nested [-hab] [-k <hex>] [--mini] [--1k] [--2k] [--4k] [--blk <dec>] [--tblk <dec>] [--ta] [--tb] [--emu] [--dump] [--mem]"
         },
         "hf mf personalize": {
             "command": "hf mf personalize",
@@ -5217,11 +5144,10 @@
                 "--blk <dec> block number",
                 "-a input key type is key A (def)",
                 "-b input key type is key B",
-                "-c <dec> input key type is key A + offset",
                 "-k, --key <hex> key, 6 hex bytes",
                 "-v, --verbose verbose output"
             ],
-            "usage": "hf mf rdbl [-habv] --blk <dec> [-c <dec>] [-k <hex>]"
+            "usage": "hf mf rdbl [-habv] --blk <dec> [-k <hex>]"
         },
         "hf mf rdsc": {
             "command": "hf mf rdsc",
@@ -5235,12 +5161,11 @@
                 "-h, --help This help",
                 "-a input key specified is A key (def)",
                 "-b input key specified is B key",
-                "-c <dec> input key type is key A + offset",
                 "-k, --key <hex> key specified as 6 hex bytes",
                 "-s, --sec <dec> sector number",
                 "-v, --verbose verbose output"
             ],
-            "usage": "hf mf rdsc [-habv] [-c <dec>] [-k <hex>] -s <dec>"
+            "usage": "hf mf rdsc [-habv] [-k <hex>] -s <dec>"
         },
         "hf mf restore": {
             "command": "hf mf restore",
@@ -5429,12 +5354,11 @@
                 "--blk <dec> block number",
                 "-a input key type is key A (def)",
                 "-b input key type is key B",
-                "-c <dec> input key type is key A + offset",
                 "--force override warnings",
                 "-k, --key <hex> key, 6 hex bytes",
                 "-d, --data <hex> bytes to write, 16 hex bytes"
             ],
-            "usage": "hf mf wrbl [-hab] --blk <dec> [-c <dec>] [--force] [-k <hex>] [-d <hex>]"
+            "usage": "hf mf wrbl [-hab] --blk <dec> [--force] [-k <hex>] [-d <hex>]"
         },
         "hf mfdes auth": {
             "command": "hf mfdes auth",
@@ -12808,8 +12732,8 @@
         }
     },
     "metadata": {
-        "commands_extracted": 740,
+        "commands_extracted": 737,
         "extracted_by": "PM3Help2JSON v1.00",
-        "extracted_on": "2024-08-03T19:17:38"
+        "extracted_on": "2024-05-27T13:38:05"
     }
 }

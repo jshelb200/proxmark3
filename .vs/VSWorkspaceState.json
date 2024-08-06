@@ -1,10 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\proxmark3",
-    "\\proxmark3\\armsrc",
-    "\\proxmark3\\include"
+    ""
   ],
-  "SelectedNode": "\\proxmark3\\armsrc\\BigBuf.c",
   "PreviewInSolutionExplorer": false
 }

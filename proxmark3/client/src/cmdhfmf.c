@@ -952,7 +952,6 @@ static int CmdHF14AMfWrBl(const char *Cmd) {
         arg_int1(NULL, "blk", "<dec>", "block number"),
         arg_lit0("a", NULL, "input key type is key A (def)"),
         arg_lit0("b", NULL, "input key type is key B"),
-        arg_int0("c", NULL, "<dec>", "input key type is key A + offset"),
         arg_lit0(NULL, "force", "override warnings"),
         arg_str0("k", "key", "<hex>", "key, 6 hex bytes"),
         arg_str0("d", "data", "<hex>", "bytes to write, 16 hex bytes"),
@@ -965,27 +964,21 @@ static int CmdHF14AMfWrBl(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 2) && arg_get_lit(ctx, 3)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 3)) {
-        keytype = MF_KEY_B;
+        keytype = MF_KEY_B;;
     }
-    uint8_t prev_keytype = keytype;
-    keytype = arg_get_int_def(ctx, 4, keytype);
-    if ((arg_get_lit(ctx, 2) || arg_get_lit(ctx, 3)) && (keytype != prev_keytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    }
-    bool force = arg_get_lit(ctx, 5);
+
+    bool force = arg_get_lit(ctx, 4);
 
     int keylen = 0;
     uint8_t key[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    CLIGetHexWithReturn(ctx, 6, key, &keylen);
+    CLIGetHexWithReturn(ctx, 5, key, &keylen);
 
     uint8_t block[MFBLOCK_SIZE] = {0x00};
     int blen = 0;
-    CLIGetHexWithReturn(ctx, 7, block, &blen);
+    CLIGetHexWithReturn(ctx, 6, block, &blen);
     CLIParserFree(ctx);
 
     if (keylen && keylen != 6) {
@@ -1060,7 +1053,6 @@ static int CmdHF14AMfRdBl(const char *Cmd) {
         arg_int1(NULL, "blk", "<dec>", "block number"),
         arg_lit0("a", NULL, "input key type is key A (def)"),
         arg_lit0("b", NULL, "input key type is key B"),
-        arg_int0("c", NULL, "<dec>", "input key type is key A + offset"),
         arg_str0("k", "key", "<hex>", "key, 6 hex bytes"),
         arg_lit0("v", "verbose", "verbose output"),
         arg_param_end
@@ -1071,24 +1063,16 @@ static int CmdHF14AMfRdBl(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 2) && arg_get_lit(ctx, 3)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 3)) {
         keytype = MF_KEY_B;
     }
-    keytype = arg_get_int_def(ctx, 4, keytype);
-    uint8_t prev_keytype = keytype;
-    keytype = arg_get_int_def(ctx, 4, keytype);
-    if ((arg_get_lit(ctx, 2) || arg_get_lit(ctx, 3)) && (keytype != prev_keytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    }
 
     int keylen = 0;
     uint8_t key[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    CLIGetHexWithReturn(ctx, 5, key, &keylen);
-    bool verbose = arg_get_lit(ctx, 6);
+    CLIGetHexWithReturn(ctx, 4, key, &keylen);
+    bool verbose = arg_get_lit(ctx, 5);
     CLIParserFree(ctx);
 
     if (keylen && keylen != 6) {
@@ -1128,7 +1112,6 @@ static int CmdHF14AMfRdSc(const char *Cmd) {
         arg_param_begin,
         arg_lit0("a", NULL, "input key specified is A key (def)"),
         arg_lit0("b", NULL, "input key specified is B key"),
-        arg_int0("c", NULL, "<dec>", "input key type is key A + offset"),
         arg_str0("k", "key", "<hex>", "key specified as 6 hex bytes"),
         arg_int1("s", "sec", "<dec>", "sector number"),
         arg_lit0("v", "verbose", "verbose output"),
@@ -1138,25 +1121,18 @@ static int CmdHF14AMfRdSc(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 1) && arg_get_lit(ctx, 2)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 2)) {
         keytype = MF_KEY_B;
     }
-    uint8_t prev_keytype = keytype;
-    keytype = arg_get_int_def(ctx, 3, keytype);
-    if ((arg_get_lit(ctx, 1) || arg_get_lit(ctx, 2)) && (keytype != prev_keytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    }
 
     int keylen = 0;
     uint8_t key[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    CLIGetHexWithReturn(ctx, 4, key, &keylen);
+    CLIGetHexWithReturn(ctx, 3, key, &keylen);
 
-    int s = arg_get_int_def(ctx, 5, 0);
-    bool verbose = arg_get_lit(ctx, 6);
+    int s = arg_get_int_def(ctx, 4, 0);
+    bool verbose = arg_get_lit(ctx, 5);
     CLIParserFree(ctx);
 
     if (keylen && keylen != 6) {
@@ -1635,15 +1611,12 @@ static int CmdHF14AMfNested(const char *Cmd) { //TODO: single mode broken? can't
         arg_int0(NULL, "blk", "<dec>", "Input block number"),
         arg_lit0("a", NULL, "Input key specified is A key (default)"),
         arg_lit0("b", NULL, "Input key specified is B key"),
-        arg_int0("c", NULL, "<dec>", "input key type is key A + offset"),
         arg_int0(NULL, "tblk", "<dec>", "Target block number"),
         arg_lit0(NULL, "ta", "Target A key (default)"),
         arg_lit0(NULL, "tb", "Target B key"),
-        arg_int0(NULL, "tc", "<dec>", "Nested input key type is key A + offset (you must specify a single block as well!)"),
         arg_lit0(NULL, "emu", "Fill simulator keys from found keys"),
         arg_lit0(NULL, "dump", "Dump found keys to file"),
         arg_lit0(NULL, "mem", "Use dictionary from flashmemory"),
-        arg_lit0("i", NULL, "Ignore static encrypted nonces"),
         arg_param_end
     };
     CLIExecWithReturn(ctx, Cmd, argtable, false);
@@ -1663,42 +1636,28 @@ static int CmdHF14AMfNested(const char *Cmd) { //TODO: single mode broken? can't
 
     if (arg_get_lit(ctx, 7) && arg_get_lit(ctx, 8)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 8)) {
         keyType = MF_KEY_B;
     }
-    uint8_t prev_keytype = keyType;
-    keyType = arg_get_int_def(ctx, 9, keyType);
-    if ((arg_get_lit(ctx, 7) || arg_get_lit(ctx, 8)) && (keyType != prev_keytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    }
 
-    int trgBlockNo = arg_get_int_def(ctx, 10, -1);
+    int trgBlockNo = arg_get_int_def(ctx, 9, -1);
 
     uint8_t trgKeyType = MF_KEY_A;
 
-    if (arg_get_lit(ctx, 11) && arg_get_lit(ctx, 12)) {
+    if (arg_get_lit(ctx, 10) && arg_get_lit(ctx, 11)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single target key type");
+        PrintAndLogEx(WARNING, "Target key type must be A or B");
         return PM3_EINVARG;
-    } else if (arg_get_lit(ctx, 12)) {
+    } else if (arg_get_lit(ctx, 11)) {
         trgKeyType = MF_KEY_B;
     }
-    uint8_t prev_trgkeytype = trgKeyType;
-    trgKeyType = arg_get_int_def(ctx, 13, trgKeyType);
-    if ((arg_get_lit(ctx, 11) || arg_get_lit(ctx, 12)) && (trgKeyType != prev_trgkeytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single target key type");
-        return PM3_EINVARG;
-    }
-    bool transferToEml = arg_get_lit(ctx, 14);
-    bool createDumpFile = arg_get_lit(ctx, 15);
+
+    bool transferToEml = arg_get_lit(ctx, 12);
+    bool createDumpFile = arg_get_lit(ctx, 13);
     bool singleSector = trgBlockNo > -1;
-    bool use_flashmemory = arg_get_lit(ctx, 16);
-    bool ignore_static_encrypted = arg_get_lit(ctx, 17);
+    bool use_flashmemory = arg_get_lit(ctx, 14);
 
     CLIParserFree(ctx);
 
@@ -1764,16 +1723,12 @@ static int CmdHF14AMfNested(const char *Cmd) { //TODO: single mode broken? can't
 
     // check if we can authenticate to sector
     if (mfCheckKeys(blockNo, keyType, true, 1, key, &key64) != PM3_SUCCESS) {
-        if (keyType < 2) {
-            PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%c", blockNo, keyType ? 'B' : 'A');
-        } else {
-            PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%02x", blockNo, MIFARE_AUTH_KEYA + keyType);
-        }
+        PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%c", blockNo, keyType ? 'B' : 'A');
         return PM3_EOPABORTED;
     }
 
     if (singleSector) {
-        int16_t isOK = mfnested(blockNo, keyType, key, trgBlockNo, trgKeyType, keyBlock, !ignore_static_encrypted);
+        int16_t isOK = mfnested(blockNo, keyType, key, trgBlockNo, trgKeyType, keyBlock, true);
         switch (isOK) {
             case PM3_ETIMEOUT:
                 PrintAndLogEx(ERR, "Command execute timeout\n");
@@ -1848,7 +1803,7 @@ static int CmdHF14AMfNested(const char *Cmd) { //TODO: single mode broken? can't
         PrintAndLogEx(SUCCESS, "enter nested key recovery");
 
         // nested sectors
-        bool calibrate = !ignore_static_encrypted;
+        bool calibrate = true;
 
         for (trgKeyType = MF_KEY_A; trgKeyType <= MF_KEY_B; ++trgKeyType) {
             for (uint8_t sectorNo = 0; sectorNo < SectorsCnt; ++sectorNo) {
@@ -2015,7 +1970,7 @@ static int CmdHF14AMfNestedStatic(const char *Cmd) {
 
     if (arg_get_lit(ctx, 7) && arg_get_lit(ctx, 8)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 8)) {
         keyType = MF_KEY_B;
@@ -2066,11 +2021,7 @@ static int CmdHF14AMfNestedStatic(const char *Cmd) {
 
     // check if we can authenticate to sector
     if (mfCheckKeys(blockNo, keyType, true, 1, key, &key64) != PM3_SUCCESS) {
-        if (keyType < 2) {
-            PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%c", blockNo, keyType ? 'B' : 'A');
-        } else {
-            PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%02x", blockNo, MIFARE_AUTH_KEYA + keyType);
-        }
+        PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block: %3d key type: %c", blockNo, keyType ? 'B' : 'A');
         return PM3_EOPABORTED;
     }
 
@@ -2293,7 +2244,7 @@ static int CmdHF14AMfNestedHard(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 3) && arg_get_lit(ctx, 4)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 4)) {
         keytype = MF_KEY_B;
@@ -2304,7 +2255,7 @@ static int CmdHF14AMfNestedHard(const char *Cmd) {
     uint8_t trg_keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 6) && arg_get_lit(ctx, 7)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single target key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 7)) {
         trg_keytype = MF_KEY_B;
@@ -2414,11 +2365,7 @@ static int CmdHF14AMfNestedHard(const char *Cmd) {
             uint64_t key64 = 0;
             // check if we can authenticate to sector
             if (mfCheckKeys(blockno, keytype, true, 1, key, &key64) != PM3_SUCCESS) {
-                if (keytype < 2) {
-                    PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%c", blockno, keytype ? 'B' : 'A');
-                } else {
-                    PrintAndLogEx(WARNING, "Wrong key. Can't authenticate to block:%3d key type:%02x", blockno, MIFARE_AUTH_KEYA + keytype);
-                }
+                PrintAndLogEx(WARNING, "Key is wrong. Can't authenticate to block: %3d  key type: %c", blockno, (keytype == MF_KEY_B) ? 'B' : 'A');
                 return PM3_EWRONGANSWER;
             }
         }
@@ -2517,7 +2464,7 @@ static int CmdHF14AMfAutoPWN(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 3) && arg_get_lit(ctx, 4)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 4)) {
         keytype = MF_KEY_B;
@@ -3061,7 +3008,7 @@ tryNested:
                             case PM3_ESTATIC_NONCE: {
                                 PrintAndLogEx(ERR, "Error: Static encrypted nonce detected. Aborted\n");
 
-                                e_sector[current_sector_i].Key[current_key_type_i] = 0xffffffffffff;
+                                e_sector[current_sector_i].Key[current_key_type_i] = 0xffffffffffff;;
                                 e_sector[current_sector_i].foundKey[current_key_type_i] = false;
                                 // Show the results to the user
                                 PrintAndLogEx(NORMAL, "");
@@ -3112,7 +3059,7 @@ tryHardnested: // If the nested attack fails then we try the hardnested attack
                                 case PM3_ESTATIC_NONCE: {
                                     PrintAndLogEx(ERR, "\nError: Static encrypted nonce detected. Aborted\n");
 
-                                    e_sector[current_sector_i].Key[current_key_type_i] = 0xffffffffffff;
+                                    e_sector[current_sector_i].Key[current_key_type_i] = 0xffffffffffff;;
                                     e_sector[current_sector_i].foundKey[current_key_type_i] = false;
 
                                     // Show the results to the user
@@ -3292,9 +3239,6 @@ static int CmdHF14AMfChk_fast(const char *Cmd) {
         arg_lit0(NULL, "dump", "Dump found keys to binary file"),
         arg_lit0(NULL, "mem", "Use dictionary from flashmemory"),
         arg_str0("f", "file", "<fn>", "filename of dictionary"),
-        arg_int0(NULL, "blk", "<dec>", "block number (single block recovery mode)"),
-        arg_lit0("a", NULL, "single block recovery key A"),
-        arg_lit0("b", NULL, "single block recovery key B"),
         arg_param_end
     };
     CLIExecWithReturn(ctx, Cmd, argtable, true);
@@ -3315,16 +3259,6 @@ static int CmdHF14AMfChk_fast(const char *Cmd) {
     int fnlen = 0;
     char filename[FILE_PATH_SIZE] = {0};
     CLIParamStrToBuf(arg_get_str(ctx, 9), (uint8_t *)filename, FILE_PATH_SIZE, &fnlen);
-
-    int blockn = arg_get_int_def(ctx, 10, -1);
-    uint8_t keytype = MF_KEY_A;
-    if (arg_get_lit(ctx, 11) && arg_get_lit(ctx, 12)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    } else if (arg_get_lit(ctx, 12)) {
-        keytype = MF_KEY_B;
-    }
 
     CLIParserFree(ctx);
 
@@ -3373,16 +3307,12 @@ static int CmdHF14AMfChk_fast(const char *Cmd) {
     // time
     uint64_t t1 = msclock();
 
-    uint16_t singleSectorParams = 0;
-    if (blockn != -1) {
-        singleSectorParams = (blockn & 0xFF) | keytype << 8 | 1 << 15;
-    }
     if (use_flashmemory) {
         PrintAndLogEx(SUCCESS, "Using dictionary in flash memory");
-        mfCheckKeys_fast_ex(sectorsCnt, true, true, 1, 0, keyBlock, e_sector, use_flashmemory, false, false, singleSectorParams);
+        mfCheckKeys_fast(sectorsCnt, true, true, 1, 0, keyBlock, e_sector, use_flashmemory, false);
     } else {
 
-        // strategies. 1= deep first on sector 0 AB,  2= width first on all sectors
+        // strategys. 1= deep first on sector 0 AB,  2= width first on all sectors
         for (uint8_t strategy = 1; strategy < 3; strategy++) {
             PrintAndLogEx(INFO, "Running strategy %u", strategy);
 
@@ -3390,41 +3320,33 @@ static int CmdHF14AMfChk_fast(const char *Cmd) {
             for (i = 0; i < keycnt; i += chunksize) {
 
                 if (kbd_enter_pressed()) {
-                    PrintAndLogEx(NORMAL, "");
                     PrintAndLogEx(WARNING, "\naborted via keyboard!\n");
                     goto out;
                 }
-                PrintAndLogEx(INPLACE, "Testing %5i/%5i %02.1f%%", i, keycnt, (float)i * 100 / keycnt);
+
                 uint32_t size = ((keycnt - i)  > chunksize) ? chunksize : keycnt - i;
 
                 // last chunk?
                 if (size == keycnt - i)
                     lastChunk = true;
 
-                int res = mfCheckKeys_fast_ex(sectorsCnt, firstChunk, lastChunk, strategy, size, keyBlock + (i * MIFARE_KEY_SIZE), e_sector, false, false, true, singleSectorParams);
+                int res = mfCheckKeys_fast(sectorsCnt, firstChunk, lastChunk, strategy, size, keyBlock + (i * MIFARE_KEY_SIZE), e_sector, false, false);
+
                 if (firstChunk)
                     firstChunk = false;
 
                 // all keys,  aborted
-                if (res == PM3_SUCCESS || res == 2) {
-                    PrintAndLogEx(NORMAL, "");
+                if (res == PM3_SUCCESS || res == 2)
                     goto out;
-                }
+
             } // end chunks of keys
-            PrintAndLogEx(INPLACE, "Testing %5i/%5i 100.00%%", keycnt, keycnt);
-            PrintAndLogEx(NORMAL, "");
             firstChunk = true;
             lastChunk = false;
-            if (blockn != -1) break;
         } // end strategy
     }
 out:
     t1 = msclock() - t1;
-    PrintAndLogEx(INFO, "Time in checkkeys (fast) " _YELLOW_("%.1fs") "\n", (float)(t1 / 1000.0));
-
-    if (blockn != -1) {
-        goto out2;
-    }
+    PrintAndLogEx(INFO, "time in checkkeys (fast) " _YELLOW_("%.1fs") "\n", (float)(t1 / 1000.0));
 
     // check..
     uint8_t found_keys = 0;
@@ -3489,7 +3411,7 @@ out:
             free(fptr);
         }
     }
-out2:
+
     free(keyBlock);
     free(e_sector);
     PrintAndLogEx(NORMAL, "");
@@ -4892,7 +4814,7 @@ static int CmdHF14AMfECFill(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 1) && arg_get_lit(ctx, 2)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 2)) {
         keytype = MF_KEY_B;
@@ -8986,19 +8908,19 @@ static int CmdHF14AMfValue(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 2) && arg_get_lit(ctx, 3)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 3)) {
-        keytype = MF_KEY_B;
+        keytype = MF_KEY_B;;
     }
 
     uint8_t transferkeytype = MF_KEY_A;
     if (arg_get_lit(ctx, 9) && arg_get_lit(ctx, 10)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single transfer key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 10)) {
-        transferkeytype = MF_KEY_B;
+        transferkeytype = MF_KEY_B;;
     }
 
     int keylen = 0;
@@ -9257,8 +9179,8 @@ static int CmdHFMFHidEncode(const char *Cmd) {
     };
     CLIExecWithReturn(ctx, Cmd, argtable, false);
 
+    int bin_len = 120;
     uint8_t bin[121] = {0};
-    int bin_len = sizeof(bin) - 1; // CLIGetStrWithReturn does not guarantee string to be null-terminated
     CLIGetStrWithReturn(ctx, 1, bin, &bin_len);
 
     wiegand_card_t card;
@@ -9386,7 +9308,7 @@ static int CmdHF14AMfInfo(const char *Cmd) {
     uint8_t keytype = MF_KEY_A;
     if (arg_get_lit(ctx, 2) && arg_get_lit(ctx, 3)) {
         CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
+        PrintAndLogEx(WARNING, "Input key type must be A or B");
         return PM3_EINVARG;
     } else if (arg_get_lit(ctx, 3)) {
         keytype = MF_KEY_B;
@@ -9618,171 +9540,11 @@ static int CmdHF14AMfInfo(const char *Cmd) {
     return PM3_SUCCESS;
 }
 
-static int CmdHF14AMfISEN(const char *Cmd) {
-    CLIParserContext *ctx;
-    CLIParserInit(&ctx, "hf mf isen",
-                  "Information about Static Encrypted Nonce properties in a MIFARE Classic card",
-                  "hf mf isen\n"
-                  "Default behavior:\n"
-                  "auth(blk)-auth(blk2)-auth(blk2)-...\n"
-                  "Default behavior when wrong key2:\n"
-                  "auth(blk)-auth(blk2) auth(blk)-auth(blk2) ...\n"
-                 );
-
-    void *argtable[] = {
-        arg_param_begin,
-        arg_int0(NULL, "blk", "<dec>", "block number"),
-        arg_lit0("a", NULL, "input key type is key A (def)"),
-        arg_lit0("b", NULL, "input key type is key B"),
-        arg_int0("c", NULL, "<dec>", "input key type is key A + offset"),
-        arg_str0("k", "key", "<hex>", "key, 6 hex bytes"),
-        arg_int0(NULL, "blk2", "<dec>", "nested block number (default=same)"),
-        arg_lit0(NULL, "a2", "nested input key type is key A (default=same)"),
-        arg_lit0(NULL, "b2", "nested input key type is key B (default=same)"),
-        arg_int0(NULL, "c2", "<dec>", "nested input key type is key A + offset"),
-        arg_str0(NULL, "key2", "<hex>", "nested key, 6 hex bytes (default=same)"),
-        arg_int0("n", NULL, "<dec>", "number of nonces (default=2)"),
-        arg_lit0(NULL, "reset", "reset between attempts, even if auth was successful"),
-        arg_lit0(NULL, "addread", "auth(blk)-read(blk)-auth(blk2)"),
-        arg_lit0(NULL, "addauth", "auth(blk)-auth(blk)-auth(blk2)"),
-        arg_lit0(NULL, "incblk2", "auth(blk)-auth(blk2)-auth(blk2+4)-..."),
-        arg_lit0(NULL, "corruptnrar", "corrupt {nR}{aR}, but with correct parity"),
-        arg_lit0(NULL, "corruptnrarparity", "correct {nR}{aR}, but with corrupted parity"),
-        arg_param_end
-    };
-    CLIExecWithReturn(ctx, Cmd, argtable, true);
-
-    int blockn = arg_get_int_def(ctx, 1, 0);
-
-    uint8_t keytype = MF_KEY_A;
-    if (arg_get_lit(ctx, 2) && arg_get_lit(ctx, 3)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    } else if (arg_get_lit(ctx, 3)) {
-        keytype = MF_KEY_B;
-    }
-    uint8_t prev_keytype = keytype;
-    keytype = arg_get_int_def(ctx, 4, keytype);
-    if ((arg_get_lit(ctx, 2) || arg_get_lit(ctx, 3)) && (keytype != prev_keytype)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single input key type");
-        return PM3_EINVARG;
-    }
-
-    int keylen = 0;
-    uint8_t key[MIFARE_KEY_SIZE] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-    CLIGetHexWithReturn(ctx, 5, key, &keylen);
-
-    int blockn_nested = arg_get_int_def(ctx, 6, blockn);
-
-    uint8_t keytype_nested = keytype;
-    if (arg_get_lit(ctx, 7) && arg_get_lit(ctx, 8)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single nested input key type");
-        return PM3_EINVARG;
-    } else if (arg_get_lit(ctx, 7)) {
-        keytype_nested = MF_KEY_A;
-    } else if (arg_get_lit(ctx, 8)) {
-        keytype_nested = MF_KEY_B;
-    }
-    uint8_t prev_keytype_nested = keytype_nested;
-    keytype_nested = arg_get_int_def(ctx, 9, keytype_nested);
-    if ((arg_get_lit(ctx, 7) || arg_get_lit(ctx, 8)) && (keytype_nested != prev_keytype_nested)) {
-        CLIParserFree(ctx);
-        PrintAndLogEx(WARNING, "Choose one single nested input key type");
-        return PM3_EINVARG;
-    }
-
-    int keylen_nested = 0;
-    uint8_t key_nested[MIFARE_KEY_SIZE];
-    memcpy(key_nested, key, MIFARE_KEY_SIZE);
-    CLIGetHexWithReturn(ctx, 10, key_nested, &keylen_nested);
-
-    int nr_nested = arg_get_int_def(ctx, 11, 2);
-
-    bool reset = arg_get_lit(ctx, 12);
-    bool addread = arg_get_lit(ctx, 13);
-    bool addauth = arg_get_lit(ctx, 14);
-    bool incblk2 = arg_get_lit(ctx, 15);
-    bool corruptnrar = arg_get_lit(ctx, 16);
-    bool corruptnrarparity = arg_get_lit(ctx, 17);
-    CLIParserFree(ctx);
-
-    uint8_t dbg_curr = DBG_NONE;
-    if (getDeviceDebugLevel(&dbg_curr) != PM3_SUCCESS) {
-        return PM3_EFAILED;
-    }
-
-    if (keylen != 0 && keylen != MIFARE_KEY_SIZE) {
-        PrintAndLogEx(ERR, "Key length must be %u bytes", MIFARE_KEY_SIZE);
-        return PM3_EINVARG;
-    }
-
-    if (keylen_nested != 0 && keylen_nested != MIFARE_KEY_SIZE) {
-        PrintAndLogEx(ERR, "Key length must be %u bytes", MIFARE_KEY_SIZE);
-        return PM3_EINVARG;
-    }
-
-    clearCommandBuffer();
-    SendCommandMIX(CMD_HF_ISO14443A_READER, ISO14A_CONNECT, 0, 0, NULL, 0);
-    PacketResponseNG resp;
-    if (WaitForResponseTimeout(CMD_ACK, &resp, 2500) == false) {
-        PrintAndLogEx(DEBUG, "iso14443a card select timeout");
-        return 0;
-    }
-
-    iso14a_card_select_t card;
-    memcpy(&card, (iso14a_card_select_t *)resp.data.asBytes, sizeof(iso14a_card_select_t));
-
-    /*
-        0: couldn't read
-        1: OK, with ATS
-        2: OK, no ATS
-        3: proprietary Anticollision
-    */
-    uint64_t select_status = resp.oldarg[0];
-
-    if (select_status == 0) {
-        PrintAndLogEx(DEBUG, "iso14443a card select failed");
-        return select_status;
-    }
-
-    if (select_status == 3) {
-        PrintAndLogEx(INFO, "Card doesn't support standard iso14443-3 anticollision");
-    }
-
-    PrintAndLogEx(NORMAL, "");
-    PrintAndLogEx(INFO, "--- " _CYAN_("ISO14443-a Information") " ---------------------");
-    PrintAndLogEx(SUCCESS, " UID: " _GREEN_("%s"), sprint_hex(card.uid, card.uidlen));
-    PrintAndLogEx(SUCCESS, "ATQA: " _GREEN_("%02X %02X"), card.atqa[1], card.atqa[0]);
-    PrintAndLogEx(SUCCESS, " SAK: " _GREEN_("%02X [%" PRIu64 "]"), card.sak, resp.oldarg[0]);
-
-//    if (setDeviceDebugLevel(DBG_DEBUG, false) != PM3_SUCCESS) {
-    if (setDeviceDebugLevel(DBG_EXTENDED, false) != PM3_SUCCESS) {
-        return PM3_EFAILED;
-    }
-
-    int res = detect_classic_static_encrypted_nonce_ex(blockn, keytype, key, blockn_nested, keytype_nested, key_nested, nr_nested, reset, addread, addauth, incblk2, corruptnrar, corruptnrarparity, true);
-    if (res == NONCE_STATIC)
-        PrintAndLogEx(SUCCESS, "Static nonce......... " _YELLOW_("yes"));
-    if (res == NONCE_STATIC_ENC)
-        PrintAndLogEx(SUCCESS, "Static enc nonce..... " _RED_("yes"));
-
-    if (setDeviceDebugLevel(dbg_curr, false) != PM3_SUCCESS) {
-        return PM3_EFAILED;
-    }
-
-    PrintAndLogEx(NORMAL, "");
-    return PM3_SUCCESS;
-}
-
 static command_t CommandTable[] = {
     {"help",        CmdHelp,                AlwaysAvailable, "This help"},
     {"list",        CmdHF14AMfList,         AlwaysAvailable, "List MIFARE history"},
     {"-----------", CmdHelp,                IfPm3Iso14443a,  "----------------------- " _CYAN_("recovery") " -----------------------"},
     {"info",        CmdHF14AMfInfo,         IfPm3Iso14443a,  "mfc card Info"},
-    {"isen",        CmdHF14AMfISEN,         IfPm3Iso14443a,  "mfc card Info Static Encrypted Nonces"},
     {"darkside",    CmdHF14AMfDarkside,     IfPm3Iso14443a,  "Darkside attack"},
     {"nested",      CmdHF14AMfNested,       IfPm3Iso14443a,  "Nested attack"},
     {"hardnested",  CmdHF14AMfNestedHard,   AlwaysAvailable, "Nested attack for hardened MIFARE Classic cards"},
