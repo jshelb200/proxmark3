@@ -3,12 +3,32 @@ All notable changes to this project will be documented in this file.
 This project uses the changelog in accordance with [keepchangelog](http://keepachangelog.com/). Please use this to write notable changes, which is not the same as git commit log...
 
 ## [unreleased][unreleased]
+- Changed file saving: do not prepend with default path if given path is an absolute path (@doegox)
+- Added few tools to crack static encrypted nonce tags such as FM11RF08S (@doegox)
+- Added `hf mf isen` for analyzing some static encrypted nonce tags (@doegox)
+- Changed `hf mf rdbl/wrbl/rdsc/nested` to support extended authentication commands (@doegox)
+- Changed `hf mf fchk` to allow cracking a single key and show progress info (@doegox)
+- Changed `trace list -t mf` to add support for extended authentication commands (@doegox)
+- Fixed `output_grabber.py` to allow several calls in a script (@doegox)
+- Changed `validate_prng_nonce` for a much faster version (@doegox)
+- Changed standalone mode HF_MATTYRUN - support more card sizes, user dictionaries, improved emulation (@michaelroland)
+- Changed `hf iclass dump --ns` - now supports the nosave flag (@iceman1001)
+- Fixed write check in hitag2crack2 buildtables (@mwalker33)
+- Fixed breaking of client when trying to load a non-supported .picopass file (@iceman100)  Thanks to Jump for suggested fixes!
+- Changed `mf_nonce_brute` tool to handle the odd case of multiple key candidates (@iceman1001)
+- Fixed a bad memory erase (@iceman1001)
 - Fixed BT serial comms (@iceman1001)
 - Changed `intertic.py` - updated and code clean up (@gentilkiwi)
 - Added `pm3_tears_for_fears.py` - a ISO14443b tear off script by Pierre Granier
 - Added new t55xx password (002BCFCF) sniffed from cheap cloner (@davidbeauchamp)
 - Fixed 'hf 14b sim' - now works (@michi-jung)
-
+- Added VB6 Rng for iclass elite keys `hf iclass lookup` and `hf iclass chk` functions by porting @bettse work in the Flipper Zero Picopass App (@antiklesys)
+- Added MFC Key for swimming pool cards in Reykjavík Iceland (@dandri)
+- Added key for Orkan keyfobs (@dandri)
+- Added key for Atlantsolía keyfobs (@dandri)
+- Added `hf iclass legbrute` this function allows to bruteforce 40/64 k1 bits of an iclass card to recover the raw key used(@antiklesys).
+- Added `hf iclass legrec` this function allows to recover 24/64 k1 bits of an iclass card (@antiklesys).
+- Added script for quick WSL-2 environment initialization every reboot (@dhuuthang).
 ## [Aurora.4.18589][2024-05-28]
 - Fixed the pm3 regressiontests for Hitag2Crack (@iceman1001)
 - Changed `mem spiffs tree` - adapted to bigbuff and show if empty (@iceman1001)

@@ -4,5 +4,93 @@ proxspace/
 #Vs Code
 .vs/
 
+<<<<<<< HEAD
 #Log
 logs/log.txt
+=======
+# new build file for add-ons.
+Makefile.platform
+Makefile.platform.*
+!Makefile.platform.sample
+
+# Cache for detecting platform def changes
+.Makefile.options.cache
+
+# cmake
+CMakeFiles/
+deps/
+client/CMakeFiles/
+client/deps/
+client/build/
+client/android/build/
+CMakeCache.txt
+*.cmake
+
+# Coverity
+cov-int/
+.coverity.conf
+
+# profiling
+*.gcno
+
+!client/resources/hardnested/*.bin
+!client/resources/hardnested_tables/*.z
+client/src/ui/ui_image.h
+client/src/ui/ui_overlays.h
+client/deps/reveng/bmptst
+
+hardnested_stats.txt
+proxmark3
+proxmark3-flasher
+flasher
+!flasher/
+lua
+luac
+tools/fpga_compress/fpga_compress
+tools/cryptorf/cm
+tools/cryptorf/sm
+tools/cryptorf/sma
+tools/cryptorf/sma_multi
+tools/jtag_openocd/openocd_configuration
+tools/mfd_aes_brute/mfd_aes_brute
+tools/mfd_aes_brute/mfd_multi_brute
+tools/mfd_aes_brute/brute_key
+!tools/lena.bmp
+
+fpga/__build*
+
+# offcial dumps folder
+dumps/*
+traces/*
+
+#client/*
+client/traces/*
+client/dumps/*
+*.ice
+*.new
+*- Copy.*
+/EF_*
+
+client/lualibs/mfc_default_keys.lua
+client/lualibs/pm3_cmd.lua
+# recompiled
+fpga_version_info.c
+
+# log / history
+.proxmark3/*
+
+# .tmp files are created during compilation
+*.tmp
+
+# VSCode files
+!.vscode/templates/*.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+
+# docs
+!doc/*.json
+
+# local codeql
+_codeql*
+/codeql
+>>>>>>> 11c1c8490cd97a9f0ddcad1b8562520123e7431a
