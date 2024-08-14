@@ -85,8 +85,60 @@
 #define SEND4STUFFBIT(x) tosend_stuffbit(x);tosend_stuffbit(x);tosend_stuffbit(x);tosend_stuffbit(x);
 
 
-pycliresp_t pyresp = { NULL, 0, false };
+static pycliresp_t pyresp;
+uint8_t tempData[RESPONSE_SIZE]; // save data received from pycli
+uint8_t last_cmd[RESPONSE_SIZE]; // save last cmd before WTX since add_pcb need it
 
+
+
+static void add_pcb_generic(pycliresp_t * entry, uint8_t* received_frame, size_t received_frame_size) {
+
+    IblockType iblock_type = analyzeIBlock(received_frame);
+
+    if (iblock_type == NS_0) {
+        // Trame reçue commence par 0x02, ajouter 0x02 au début de la trame à envoyer
+        memmove(entry->data + 1, entry->data, entry->len);
+        entry->data[0] = 0x02;
+        entry->len++;
+    }
+    else if (iblock_type == NS_1) {
+        // Trame reçue commence par 0x03, ajouter 0x03 au début de la trame à envoyer
+        memmove(entry->data + 1, entry->data, entry->len);
+        entry->data[0] = 0x03;
+        entry->len++;
+
+    }
+    else if (iblock_type == WUPB) {
+        // Trame reçue commence par 0x05, ajouter 0x05 au début de la trame à envoyer
+        memmove(entry->data + 1, entry->data, entry->len);
+        entry->data[0] = 0x50;
+        entry->len++;
+    }
+    else {
+        // Trame reçue ne commence ni par 0x02 ni par 0x03, gestion d'erreur
+        Dbprintf("Attention : Iblock non identifie .\n");
+    }
+    for (int i = 0; i < entry->len; i++) {
+        Dbprintf("%02X ", entry->data[i]);
+    }
+    return;
+}
+
+
+// Fonction pour ajouter le CRC
+static void add_crc(pycliresp_t* entry) {
+    if (entry->len < RESPONSE_SIZE - 2) { 
+        // Ajouter deux octets 0x00 pour le calcul du CRC
+        entry->data[entry->len] = 0x00;
+        entry->data[entry->len + 1] = 0x00;
+
+        entry->len += 2;
+
+        // Calculer le CRC sur tous les octets sauf les deux derniers
+        AddCrc14B(entry->data, entry->len - 2);
+    }
+    return;
+}
 
 //-----------------------------------------------------------------------------
 // The software UART that receives commands from the reader, and its state
@@ -137,53 +189,40 @@ static void SendToPyCli(const uint8_t* data, size_t length) {
     if (length > PYCLIENT_MAX_MSG_SIZE) {
         length = PYCLIENT_MAX_MSG_SIZE;  // S'assurer que la longueur ne dépasse pas la taille maximale
     }
-    char output[PYCLIENT_MAX_MSG_SIZE * 3] = { 0 };  
+    char output[PYCLIENT_MAX_MSG_SIZE * 2 + 1] = { 0 };
     size_t index = 0;
     for (size_t i = 0; i < length; ++i) {
         byte_to_hex(data[i], &output[index]);
-        index += 3;  
+        index += 2;  
     }
-    
-    if (index > 0) {
-        output[index - 1] = '\0';
-    }
+
     Dbprintf("%s", output);
 }
 
-// First function called when we received a data over the UART 
-int notify_middleware(PacketCommandNG* packet) {
+// First function called when we received a data over the UART from pyclient
+int notify_middleware(PacketCommandNG* packet, uint8_t * receivedcmd, size_t cmdlen) {
     if (packet->length == 0) {
         return 0;
     }
+    
     pyresp.data = packet->data.asBytes;
     pyresp.len = packet->length;
     pyresp.ok = true;
+    add_pcb_generic(&pyresp, receivedcmd, cmdlen);
+    add_crc(&pyresp);
+    memcpy(tempData, pyresp.data, pyresp.len);
+    Dbprintf("pyresp.len: %d", pyresp.len);
+    Dbprintf("pyresp.data: %02X %02X %02X %02X", pyresp.data[0], pyresp.data[1], pyresp.data[2], pyresp.data[3]);
+    Dbprintf("pyresp.ok: %s", pyresp.ok ? "true" : "false");
     return 0;
 }
-/*
-static void PyCliPacketReceived(PacketCommandNG* packet) {
+
+// Mini packetReceived juste pour gerer les données recu du pyclient lors de la simulation.
+static void PyCliPacketReceived(PacketCommandNG* packet, uint8_t* receivedcmd, size_t cmdlen) {
 
     switch (packet->cmd) {
     case CMD_BREAK_LOOP:
         break;
-
-    case CMD_HF_ISO14443BCAL_SIMULATE: {
-        SimulateCalypsoTag(packet->data.asBytes);
-        break;
-    }
-    case CMD_PY_INITCALYPSO: {
-        InitCalypso(packet->data.asBytes);
-        break;
-    }
-    case CMD_HF_CHECK: {
-        CheckRF(packet->data.asBytes);
-        break;
-    }
-                     //Pour entrer dans le mode de dialogue avec un lecteur
-    case CMD_PY_CLIENT_SIM: {
-        handlePyClientSim(packet->data.asBytes);
-        break;
-    }
     case CMD_PY_CLIENT_DATA: {
         // Afficher les données reçues pour débogage
         Dbprintf("Data Received: ");
@@ -191,17 +230,16 @@ static void PyCliPacketReceived(PacketCommandNG* packet) {
             Dbprintf("%02X ", packet->data.asBytes[i]);
         }
         Dbprintf("\n");
-        notify_middleware(packet);
+        notify_middleware(packet, receivedcmd, cmdlen);
         break;
     }
 
     default:
-    {
         break;
-    }
+    
     }
 }
-*/
+
 
 /*
 static void process_and_send_frame(CalypsoFrame* frame, uint8_t* receivedCmd, size_t len) {
@@ -246,9 +284,9 @@ void handlePyClientSim(uint8_t* pupi) {
     /*
     l'objectif de cette fonction est de simuler une carte calypso avec un script python.
      On va donc envoyer les commandes du lecteur au client python et attendre la reponse
-     Avant il faut initialiser la communication avec la carte en repondant aux 
+     Avant il faut initialiser la communication avec la carte en repondant aux
      commandes WUPB, REQB, ATTRIB, HALT.. le WTX ne fonctionnant qu'avec les cmd de BLOC I
-    */ 
+    */
 
 
     // INITIALISATION DE LA SIMULATION
@@ -291,13 +329,13 @@ void handlePyClientSim(uint8_t* pupi) {
         0x00,                      // Bit rate capacity 
         0x71,                       // Max frame size
         0x71, 					   // FWI/Coding Options
-        0x1E,0x37                  // CRC de l'ATQB
+        0x00,0x00                  // CRC placeholder
     };
 
     uint8_t respOK[] = { 0x00, 0x78,  0xF0 };
     uint8_t respFILE_NOT_FOUND[] = { 0x02, 0x6A, 0x82, 0x4B, 0x4C };
     uint8_t REQ_WTX[] = { 0xF2, 0x32, 0x6E, 0x52 }; // S(WTX) avec un WTXM(0x32) = 50 [1-59], 1 WTXM = 77 microsecond ( 50 * 77 = 3850 us )
-    uint8_t respEnd[] = { 0xA2,  0x60,  0x76 }; 
+    uint8_t respEnd[] = { 0xA2,  0x60,  0x76 };
 
 
 
@@ -317,6 +355,7 @@ void handlePyClientSim(uint8_t* pupi) {
         respATQB[3] = 0x0B;
         respATQB[4] = 0xF7;
     }
+    AddCrc14B(respATQB, 12);
 
     CalypsoFrame  calypso_RESP[] = {
     { NULL, 0, respATQB, sizeof(respATQB), true, true },
@@ -410,16 +449,16 @@ void handlePyClientSim(uint8_t* pupi) {
             LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
             cardSTATE = SIMCAL_HALTING;
         }
-        else if (len == 19 && receivedCmd[5] == WIN_APP[0] && receivedCmd[6] == WIN_APP[1]) {
-            LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
-            cardSTATE = SIMCAL_WIN_APP;
-        }
         else if (len == 4 && receivedCmd[0] == WTX_PCB) {
+            LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
+            cardSTATE = HANDLE_WTX;
+        }
+        else if (len == 19 && receivedCmd[6] == WIN_APP[0] && receivedCmd[7] == WIN_APP[1]) {
 			LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
-			cardSTATE = HANDLE_WTX;
+			cardSTATE = SIMCAL_WIN_APP;
 		}
-
         else if (receivedCmd[0] == 0x02 || receivedCmd[0] == 0x03) { // Iblock avec NS = 1 ou NS = 0
+            memcpy(last_cmd, receivedCmd, len); // Copy cmd since add_pcb need it
             cardSTATE = PYTHON_HANDLER;
             LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
         }
@@ -460,7 +499,6 @@ void handlePyClientSim(uint8_t* pupi) {
             break;
         }
         case SIMCAL_HALTING: {
-
             sof_time = GetCountUS();
             TransmitFor14443b_AsTag(calypso_RESP[1].encodedData, calypso_RESP[1].encodedDataLen);
             eof_time = GetCountUS();
@@ -476,72 +514,60 @@ void handlePyClientSim(uint8_t* pupi) {
             break;
         }
         case SIMCAL_B3: {
-			sof_time = GetCountUS();
-			TransmitFor14443b_AsTag(calypso_RESP[4].encodedData, calypso_RESP[4].encodedDataLen);
-			eof_time = GetCountUS();
-			LogTrace(respEnd, sizeof(respEnd), (sof_time), (eof_time), NULL, false);
-			break;
-		}
-        case HANDLE_WTX : {
+            sof_time = GetCountUS();
+            TransmitFor14443b_AsTag(calypso_RESP[4].encodedData, calypso_RESP[4].encodedDataLen);
+            eof_time = GetCountUS(); 
+            LogTrace(respEnd, sizeof(respEnd), (sof_time), (eof_time), NULL, false);
+            break;
+        }
+        case HANDLE_WTX: {
             //WTX = 3850 ms
             //ACK = 3 ms (Puck <-> pm3)
             sow_time = GetCountUS();
             sof_time = GetCountUS();
             eow_time = GetCountUS();
-            while ((eow_time - sow_time) < (2*1000000) ) {   // On attend 2 secondes pour voir si on recoit une reponse du client python
-                WaitUS(500);
+            while ((eow_time - sow_time) < (2 * 1000000) || BUTTON_PRESS() == false ) {   // On attend 2 secondes pour voir si on recoit une reponse du client python
+                //WaitUS(100);
                 eow_time = GetCountUS();
-                /*
-                // Check if there is a RF packet available
-                if (GetIso14443bCommandFromReader(receivedCmd, &len) == true) {
-                    // Si je recois une nouvelle commande alors que je suis en attente de la reponse..
-                    if (receivedCmd[0] == 0x02 || receivedCmd[0] == 0x03) {
-                        LogTrace(receivedCmd, len, 0, 0, NULL, true);
-						cardSTATE = PYTHON_HANDLER;
-						break;
-					}
-                    else if ( len == 3 && receivedCmd[0] == 0xB3) {
-						LogTrace(receivedCmd, len, 0, 0, NULL, true);
-						cardSTATE = SIMCAL_B3;
-						break;
-					}
-                    break;
-                }
-                */
-                /*
-                // Check if there is an USB packet available
+                // Check if there is a packet available
                 PacketCommandNG rx;
                 memset(&rx.data, 0, sizeof(rx.data));
                 int ret = receive_ng(&rx);
                 if (ret == PM3_SUCCESS) {
-                    PyCliPacketReceived(&rx);
+                    PyCliPacketReceived(&rx, last_cmd, sizeof(last_cmd));
                 }
                 else if (ret != PM3_ENODATA) {
-                    Dbprintf("Error in frame reception: %d %s", ret, (ret == PM3_EIO) ? "PM3_EIO" : "");
+                    Dbprintf("Error in data reception from pyclient : %d %s", ret, (ret == PM3_EIO) ? "PM3_EIO" : "");
                     // TODO if error, shall we resync ?
                 }
-                */
 
             }
             if (pyresp.ok) {
                 Dbprintf("py resp ok");
                 // Imprimez pyresp.data
-                SendToPyCli(pyresp.data, pyresp.len);
+                for (int i = 0; i < pyresp.len; i++) {
+                    Dbprintf("tempData[%d]: %02X", i, tempData[i]);
+                }
                 sof_time = GetCountUS();
-                TransmitFor14443b_AsTag(pyresp.data, pyresp.len);
+                // prepare "Resp" tag answer (encoded):
+                CodeIso14443bAsTag(tempData, sizeof(tempData));
+                uint8_t* encodedtempData = BigBuf_malloc(ts->max);
+                uint16_t encodedtempDataLen = ts->max;
+                memcpy(encodedtempData, ts->buf, ts->max);
+                TransmitFor14443b_AsTag(encodedtempData, encodedtempDataLen);
                 eof_time = GetCountUS();
-                LogTrace(pyresp.data, pyresp.len, sof_time, eof_time, NULL, false);
+                LogTrace(tempData, pyresp.len, sof_time, eof_time, NULL, false);
                 pyresp.ok = false;
-            } 
+            }
             else {
                 sof_time = GetCountUS();
                 TransmitFor14443b_AsTag(calypso_RESP[2].encodedData, calypso_RESP[2].encodedDataLen); // On renvoie le WTX
                 eof_time = GetCountUS();
                 LogTrace(REQ_WTX, sizeof(REQ_WTX), (sof_time), (eof_time), NULL, false);
-			}
-            
-			break;
-		}
+            }
+
+            break;
+        }
         case PYTHON_HANDLER: {
             sof_time = GetCountUS();
             TransmitFor14443b_AsTag(calypso_RESP[2].encodedData, calypso_RESP[2].encodedDataLen);
@@ -568,6 +594,8 @@ void handlePyClientSim(uint8_t* pupi) {
         BigBuf_free();
     }
 }
+
+
 
 
 

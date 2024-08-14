@@ -1,17 +1,37 @@
+# -*- coding: utf-8 -*-
+# =======================================================================================
+# File: proxmark.py
+# Project: Proxmark Advanced Python Client
+# File Description: This module provides functions and utilities to interact with the 
+#              Proxmark3 firmware. It allows sending commands, receiving responses, 
+#              and controlling the Proxmark3 device through a Python interface.
+#              The module supports various operations like communication with NFC 
+#              tags, RFID cards, and other proximity-based devices.
+# Usage:
+#    python proxmark.py [-v | -vv | -vvv]
+#    -v: Verbose mode (print)
+#    -vv: Verbose mode (print + warning)
+#    -vvv: Verbose mode (print + warning + error)
+#    Default: -v
+# Author: Jerome.e & SpringCard Co
+# =======================================================================================
+
 from re import T
 import serial
 import threading
 import argparse
-from pm3_cmd import CMD_PY_CLIENT
-from utils import Debug, stylized_banner, pycli_print, bytes_to_hex_string 
+from utils import Debug, pmfw_print, stylized_banner, bytes_to_hex_string
 from colorama import init, Fore, Style
 import struct
 import sys
 import queue
 import time
+from apdu import RAPDU
+from pm3 import *
+from CalypsoCard import CalypsoCard 
 
 # Constants PM3 
-TX_COMMANDNG_PREAMBLE_MAGIC = b"PM3a"  # 0x504d3361 PM3a 61334D50 a3MP 
+TX_COMMANDNG_PREAMBLE_MAGIC = b"PM3a"  # 0x504d3361 PM3a 61334D50 a3MP  # But 
 TX_COMMANDNG_POSTAMBLE_MAGIC = b"a3"   # 0x6133
 RX_COMMANDNG_PREAMBLE_MAGIC = b"PM3b"  # 0x504d3362
 RX_COMMANDNG_POSTAMBLE_MAGIC = b"b3"   # 0x6233
@@ -23,25 +43,14 @@ TX_COMMANDNG_PREAMBLE_MAGIC_PY = b"Pym3"
 TX_COMMANDNG_POSTAMBLE_MAGIC_PY = b"a3"
 
 # Pour la simulation
+Iblock = {"02", "03"}
 Reader = bytes_to_hex_string(b'\x03\x00\xCA\x7F\x68\x00\x0F\x7D')
-pm = b'\x03\x6B\x00\x55\xAB'
+#pm = b'\x6B\x00' #Incorrect parameters (P1,P2)
 received_queue = queue.Queue()
 global receivedCmd
 
 # Verrou global pour synchroniser l'affichage
 display_lock = threading.Lock()
-
-
-# Définir les commandes pm3
-CMD_PY_SEND =                       0x0A00
-CMD_PY_RECV =                       0x0A01
-CMD_PY_INITCALYPSO =                0x0A02
-CMD_HF_ISO14443BCAL_SIMULATE =      0x0A03
-CMD_HF_CHECK =                      0x0A04
-CMD_PY =                            0x0A05
-CMD_PY_CLIENT_SIM =                 0x0A06
-CMD_PY_CLIENT_DATA =                0x0A07
-CMD_BREAK_LOOP =                    0x0118
 
 debug = Debug()
 
@@ -82,10 +91,10 @@ def serial_reader_task(dev, show_out):
                             debug.warning(f"Received response: {response.hex()} | {response.decode('ascii', errors='ignore')}")
                             debug.warning(f"Received Data len: {hex(received_data_len)} | {str(received_data_len)}")
                             debug.warning(f"Received Data: {received_data.hex()} | {received_data.decode('ascii', errors='ignore')}")
-                            received_queue.put(received_data.decode('ascii', errors='ignore'))  # Ajouter la commande reçue à la queue
+                            received_queue.put(received_data.decode('ascii', errors='ignore'))  # Ajouter la commande reçue à la queue. Format cmd : XXXXXXXX
                             if show_out:
                                 with display_lock:
-                                    pycli_print(received_data.decode('ascii', errors='ignore'))
+                                    pmfw_print(received_data.decode('ascii', errors='ignore')) # Format cmd : XX XX XX XX
             except serial.SerialException as e:
                 debug.error(f"Communication error: {e}")
                 dev.run = False
@@ -123,8 +132,8 @@ def open_proxmark(dev, port, wait_for_port, timeout, flash_mode, speed, print_ou
     return True
 
 def send_command(serial_port, cmd, data):
-    if cmd == CMD_PY_CLIENT_DATA:
-        print(f"Envoi d'une donnée : {data.hex()}")  # Afficher en hexadécimal
+    if cmd == CMD_PY_CLIENT_DATA :
+        print(f"Envoi d'une donnée : {data}")  # Afficher en hexadécimal
     else:
         print(f"Envoi d'une commande : {cmd}")
 
@@ -159,10 +168,21 @@ def main():
     timeout = 10
     banner = stylized_banner({port})
     print(banner)
-
+    
+    card = CalypsoCard(serial_number="DDCCBBAA")
+    aid = b'\x3F\x04'
+    card.create_application(aid)
+    record_1 = bytes.fromhex("DDDDDDDDDDDD")
+    record_2 = bytes.fromhex("CCCCCCCCCCCC")
+    card.add_record(aid, record_1)
+    card.add_record(aid, record_2)
+    
+    
+    # Affichage de la carte
+    print(f"Card: {card}")
+    
     global debug
     debug = Debug(verbosity_level=args.verbosity)
-
     try:
         proxmark_device = ProxmarkDevice()
         if open_proxmark(proxmark_device, port, 
@@ -170,31 +190,37 @@ def main():
                          timeout=timeout, 
                          flash_mode=False, 
                          speed=speed, 
-                         print_out = False # Print the output : mettre en false en mode interactif
+                         print_out = True # Print the output : A mettre en false en mode interactif
                          ):
             print("Proxmark3 ouvert et communication démarrée.")
             print("Envoi de la commande CMD_PY_CLIENT_SIM...")
-            command_data = b'\x00\x00\x00\x00'
-            send_command(proxmark_device.serial_port, CMD_PY_CLIENT_SIM, command_data)
-            # print(Reader)
-
+            uid = b'\xDD\xCC\xBB\xAA'
+            send_command(proxmark_device.serial_port, CMD_PY_CLIENT_SIM, uid)
             # Emulation loop
             while proxmark_device.run:
                 try:
                     receivedCmd = received_queue.get_nowait() 
-                    if receivedCmd == Reader:
+                    if receivedCmd[:2] in Iblock :
+                        iblock_cmd = receivedCmd
                         print (f"\n{Fore.GREEN}## Init OK ##{Style.RESET_ALL}\n")
                         print(f"C-APDU: {receivedCmd}")
                         #pm =input("R-APDU:")
                         #print(f"R-APDU: {pm}")
-                        time.sleep(0.5)
-                        send_data(proxmark_device.serial_port, pm)
+                        time.sleep(0.1)
+                        print(f"##")
+                        response = CalypsoCard.process_tpdu(card, receivedCmd)
+                        print(response)
+                        print(f"###")
+                        #response = bytes.fromhex("85 17 04 04 02 10 01 1F 12 00 00 01 01 01 01 00 00 00 00 00 00 00 00 00 00 90 00")
+                        send_data(proxmark_device.serial_port, response)
                 except queue.Empty:
                     pass  # Do nothing if the queue is empty
                 time.sleep(0.1)
         else:
             debug.error("Échec de l'ouverture de Proxmark3.")
+            
     except KeyboardInterrupt:
+        send_command(proxmark_device.serial_port, CMD_BREAK_LOOP, b'')
         print("CTRL+C. Fermeture...")
         proxmark_device.run = False
         if proxmark_device.communication_thread:

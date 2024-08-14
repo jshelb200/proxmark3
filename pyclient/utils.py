@@ -1,19 +1,9 @@
-"""
-Proxmark Python Client
-Description:
-    Python client for communicating with the Proxmark3 device over UART.
-Author:
-    Jerome.E & SpringCard - 2024
-Usage:
-    python client.py [-v | -vv | -vvv]
-    -v: Verbose mode (print)
-    -vv: Verbose mode (print + warning)
-    -vvv: Verbose mode (print + warning + error)
-    Default: -v
-
-File : utils.py
-"""
-
+# -*- coding: utf-8 -*-
+# ==============================================================================
+# File: utils.py
+# Project: Proxmark Advanced Python Client
+# Author: Jerome.e & SpringCard Co
+# ==============================================================================
 
 from msilib import PID_LASTPRINTED
 import os
@@ -56,10 +46,11 @@ class Debug:
             
 
             
-
-def pycli_print(data):
-# Formatter le paquet
-    print(f"{Fore.CYAN}[=] {Style.RESET_ALL}{data}")             
+# Pour differencier les messages du FW et ceux du client
+def pmfw_print(data):
+    # Add space in data xx xx xx xx if num in data
+     #   data = ' '.join(data[i:i+2] for i in range(0, len(data), 2))
+    print(f"{Fore.CYAN}[+] {Style.RESET_ALL}{data}")             
         
 def compute_crc(data):
     # Necessaire ?

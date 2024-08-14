@@ -1,0 +1,22 @@
+Config registre
+
+Address :  02 A0 : Smart Reader features
+
+default :  00 03 00 02 00
+byte 00 =  1000 0000 = 80
+byte 01 =  0000 0011 = 03
+byte 10 =  0000 0000 = 00
+byte 11 =  0000 0010 = 02
+byte 100 = 0000 0000 = 00
+test = 8003000200
+_________________________________________________________________
+
+
+Address : 02C0 (bank 2, register C0) : Profile
+default : 00 
+byte : 0000 0100
+test : 04
+
+Template register
+Address range : 0310-031F
+

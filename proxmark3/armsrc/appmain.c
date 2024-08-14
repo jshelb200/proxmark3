@@ -814,18 +814,10 @@ static void PacketReceived(PacketCommandNG *packet) {
         handlePyClientSim(packet->data.asBytes);
         break;
     }
-                          /*
     case CMD_PY_CLIENT_DATA: {
-        // Afficher les données reçues pour débogage
-        Dbprintf("Data Received: ");
-        for (int i = 0; i < packet->length; i++) {
-            Dbprintf("%02X ", packet->data.asBytes[i]);
-        }
-        Dbprintf("\n");
-        notify_middleware(packet);
-        break;
+        // Juste pour eviter le  msg unknown command..
     }
-                    */
+   
           //##############################################################################################################################################################################
     case CMD_QUIT_SESSION: {
         g_reply_via_fpc = false;
