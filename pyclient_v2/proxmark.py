@@ -20,7 +20,7 @@ from re import T
 import serial
 import threading
 import argparse
-from utils import Debug, pmfw_print, stylized_banner, bytes_to_hex_string
+from utils import Debug, pmfw_print, stylized_banner, bytes_to_hex_string, only_apdu
 from colorama import init, Fore, Style
 import struct
 import sys
@@ -28,7 +28,7 @@ import queue
 import time
 from apdu import RAPDU
 from pm3 import *
-from Cardlet_calyspo import CalypsoCard, process_tpdu   
+from Cardlet_Calypso import CalypsoCard
 
 # Constants PM3 
 TX_COMMANDNG_PREAMBLE_MAGIC = b"PM3a"  # 0x504d3361 PM3a 61334D50 a3MP  # But 
@@ -43,11 +43,11 @@ TX_COMMANDNG_PREAMBLE_MAGIC_PY = b"Pym3"
 TX_COMMANDNG_POSTAMBLE_MAGIC_PY = b"a3"
 
 # Pour la simulation
-Iblock = {"02", "03"}
+Iblock = {b'\x02', b'\x03'}
 Reader = bytes_to_hex_string(b'\x03\x00\xCA\x7F\x68\x00\x0F\x7D')
 #pm = b'\x6B\x00' #Incorrect parameters (P1,P2)
 received_queue = queue.Queue()
-global  receivedCmd
+global receivedCmd
 
 # Verrou global pour synchroniser l'affichage
 display_lock = threading.Lock()
@@ -148,6 +148,7 @@ def send_command(serial_port, cmd, data):
     # Envoyer la commande
     serial_port.write(command_packet)
     debug.warning(f"Commande envoyée: {command_packet.hex()}")
+    time.sleep(0.2)
     
     
 # Pour envoyer des données au proxmark. Le FW le reçoit via usb et le transmet au lecteur via RF.. 
@@ -169,11 +170,11 @@ def main():
     banner = stylized_banner({port})
     print(banner)
     
-    card = CalypsoCard(serial_number="DDCCBBAA")
+    card = CalypsoCard(serial_number="00000000")
     aid = b'\x3F\x04'
     card.create_application(aid)
     record_1 = bytes.fromhex("DDDDDDDDDDDD")
-    record_2 = bytes.fromhex("CCCCCCCCCCCC") 
+    record_2 = bytes.fromhex("CCCCCCCCCCCC")
     card.add_record(aid, record_1)
     card.add_record(aid, record_2)
     
@@ -199,18 +200,22 @@ def main():
             # Emulation loop
             while proxmark_device.run:
                 try:
-                    received = received_queue.get_nowait() 
-                    if received[:2] in Iblock : # Si la commande reçue est un bloc I (02 ou 03) 
-                        #iblock_cmd = receivedCmd
-                        print (f"\n{Fore.GREEN}## Init OK ##{Style.RESET_ALL}\n")
-                        print(f"C-APDU: {received}")
+                    receivedCmd = received_queue.get_nowait()
+                    capdu = only_apdu(receivedCmd)
+                    print(f"C-APDU: {capdu}")
+                    if (capdu[0] == b'\x94') and (capdu[1] == b'\xA4'):
+                        print(f"Command SELECT")
+                        response = CalypsoCard.process_tpdu(card, receivedCmd)
                         time.sleep(0.1)
-                        # convert receivedCmd to bytes
-                        receivedCmd = bytes.fromhex(received)
-                        print(f"CAPDU : {receivedCmd}")
-                        response, sw = process_tpdu(card, receivedCmd)
-                        print(f"RAPDU : (response: {response}, status word: {sw})")
-                        send_data(proxmark_device.serial_port, response + sw) 
+                        print(response)
+                        send_data(proxmark_device.serial_port, response)
+                    time.sleep(0.1)
+                    response = CalypsoCard.process_tpdu(card, receivedCmd)
+                    time.sleep(0.1)
+                    print(response)
+                    #response = bytes.fromhex("85 17 04 04 02 10 01 1F 12 00 00 01 01 01 01 00 00 00 00 00 00 00 00 00 00 90 00")
+                    send_data(proxmark_device.serial_port, response)
+                    received_queue.task_done()
                 except queue.Empty:
                     pass  # Do nothing if the queue is empty
                 time.sleep(0.1)
@@ -218,19 +223,16 @@ def main():
             debug.error("Échec de l'ouverture de Proxmark3.")
             
     except KeyboardInterrupt:
-        print("CTRL+C détecté. Fermeture en cours...")
-        proxmark_device.run = False  # Indique au thread de s'arrêter
-        time.sleep(0.1)
         send_command(proxmark_device.serial_port, CMD_BREAK_LOOP, b'')
-    
-        if proxmark_device.communication_thread.is_alive():
-            proxmark_device.communication_thread.join()  # Attends que le thread se termine correctement
-    
-        if proxmark_device.serial_port and proxmark_device.serial_port.is_open:
-            proxmark_device.serial_port.close()
-
-        sys.exit(0)  # Sortie propre
-
+        print("CTRL+C. Fermeture...")
+        proxmark_device.run = False
+        # stop the communication thread
+        proxmark_device.communication_thread.join()
+        time.sleep(0.1)
+        proxmark_device.serial_port.close()
+        sys.exit(0)  # Exit cleanly after closing the serial port
+    except Exception as e:
+        debug.error(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()

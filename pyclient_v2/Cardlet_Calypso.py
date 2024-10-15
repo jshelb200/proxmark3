@@ -9,31 +9,17 @@
 # Author: Jerome.e & SpringCard Co
 # =======================================================================================
 
-# Import necessary modules
+
 from apdu import CAPDU, RAPDU
 from utils import Debug
+from Cardlet import Application, Cardlet
 
-class Application:
-    def __init__(self, aid):
-        self.aid = aid
-        self.records = []
-
-    def add_record(self, record):
-        self.records.append(record)
-
-    def get_record(self, index):
-        if index < len(self.records):
-            return self.records[index]
-        else:
-            return None
-
-    def __repr__(self):
-        return f"Application AID: {self.aid.hex()}, Records: {[record.hex() for record in self.records]}"
-
-class CalypsoCard:
+class CalypsoCard(Cardlet):
+    _name = "Calypso"
+    
     def __init__(self, serial_number):
         self.serial_number = serial_number
-        self.applications = {}  # Dictionnaire d'applications, avec l'AID comme clé
+        self.applications = {}  # Dictionnaire d'applications, avec l'AID comme clï¿½
         self.selected_application = None  # Objet de la classe Application, initialement None
         self.selected_record_index = 0
         self.status_word = RAPDU.SW.OK
@@ -51,14 +37,15 @@ class CalypsoCard:
         if aid in self.applications:
             self.status_word = RAPDU.SW.FILE_EXISTS
             return self.status_word
-        self.applications[aid] = Application(aid)  # Créer une nouvelle application
+        self.applications[aid] = Application(aid)  # Crer une nouvelle application
         self.status_word = RAPDU.SW.OK
         return self.status_word
+    
 
     def select_application(self, aid):
         if aid in self.applications:
             self.selected_application = self.applications[aid]
-            self.selected_record_index = 0  # Réinitialiser l'index des records lors de la sélection
+            self.selected_record_index = 0  # Reinitialiser l'index des records lors de la sï¿½lection
             self.status_word = RAPDU.SW.OK
         else:
             self.selected_application = None
@@ -69,7 +56,7 @@ class CalypsoCard:
         if aid not in self.applications:
             self.status_word = RAPDU.SW.FILE_NOT_FOUND
             return self.status_word
-        self.applications[aid].add_record(record)  # Ajouter le record à l'application
+        self.applications[aid].write_record(record)  # Ajouter le record de l'application
         self.status_word = RAPDU.SW.OK
         return self.status_word
 
@@ -77,7 +64,7 @@ class CalypsoCard:
         if aid not in self.applications:
             self.status_word = RAPDU.SW.FILE_NOT_FOUND
             return None
-        record = self.applications[aid].get_record(record_id)  # Retourner le record demandé
+        record = self.applications[aid].read_record(record_id)  # Retourner le record demande
         if record:
             self.status_word = RAPDU.SW.OK
         else:
@@ -86,9 +73,63 @@ class CalypsoCard:
 
     def get_selected_application(self):
         return self.selected_application
+    
+    def deselect(self, aid):
+        if aid in self.applications:
+            self.selected_application = None
+            self.selected_record_index = 0
+            self.status_word = RAPDU.SW.OK
+        else:
+            self.status_word = RAPDU.SW.FILE_NOT_FOUND
+        return self.status_word
+    
+    
+    def create_application(self, aid):
+        if aid in self.applications:
+            self.status_word = RAPDU.SW.FILE_EXISTS
+            return self.status_word
+        self.applications[aid] = Application(aid)  # Creer une nouvelle application
+        self.status_word = RAPDU.SW.OK
+        return self.status_word
 
+    def parse_tpdu(self, tpdu):
+        pcb = cla = ins = p1_p2 = lc = data = le = crc = None
+        data_len = 0
 
+        if len(tpdu) >= 1:
+            pcb = tpdu[:1]
 
+        if len(tpdu) >= 2:
+            cla = tpdu[1:2]
+
+        if len(tpdu) >= 3:
+            ins = tpdu[2:3]
+
+        if len(tpdu) >= 5:
+            p1_p2 = tpdu[3:5]
+
+        if len(tpdu) >= 6:
+            lc = tpdu[5:6]
+            data_len = int.from_bytes(lc, 'big') if lc else 0
+
+        if len(tpdu) >= 6 + data_len:
+            data = tpdu[6:6 + data_len]
+
+        if len(tpdu) >= 6 + data_len + 1:
+            le = tpdu[6 + data_len:6 + data_len + 1]
+
+        if len(tpdu) >= 6 + data_len + 2:
+            crc = tpdu[-2:]
+
+        if ins == b'\xb2':
+            data = None
+            le = None
+
+        return pcb, cla, ins, p1_p2, lc, data, le, crc
+    
+    
+# Point d'entrï¿½e pour gerer les transactions Calypso
+@staticmethod
 def process_tpdu(card, tpdu):
     response = b''
     sw = b''
@@ -132,9 +173,6 @@ def process_tpdu(card, tpdu):
 
     return response, sw
 
-
-
-
 def parse_tpdu(tpdu):
     pcb = cla = ins = p1_p2 = lc = data = le = crc = None
     data_len = 0
@@ -164,7 +202,7 @@ def parse_tpdu(tpdu):
     if len(tpdu) >= 6 + data_len + 2:
         crc = tpdu[-2:]
 
-    # Traitement spécifique pour les commandes READ RECORD
+    # Traitement spï¿½cifique pour les commandes READ RECORD
     if ins == b'\xb2':
         data = None
         le = None
@@ -173,9 +211,9 @@ def parse_tpdu(tpdu):
 
 
 def test_process_tpdu():
-    card = CalypsoCard(serial_number="DDCCBBAA")
+    card = CalypsoCard(serial_number="00000000")
     
-    # Création des applications et ajout des enregistrements
+    # Crï¿½ation des applications et ajout des enregistrements
     aid_1 = b'\x3F\x04'
     aid_2 = b'\x3F\x05'
     card.create_application(aid_1)
@@ -199,14 +237,11 @@ def test_process_tpdu():
     response, sw = process_tpdu(card, tpdu_read_record)
     print(f"READ RECORD response: {response.hex()}, Status: {sw.hex()}")
 
-    # Test de la commande READ RECORD avec aucune application sélectionnée
-    card.selected_application = None  # Désélectionner l'application
+    # Test de la commande READ RECORD avec aucune application sï¿½lectionnï¿½e
+    card.selected_application = None  # Dï¿½sï¿½lectionner l'application
     response, sw = process_tpdu(card, tpdu_read_record)
     print(f"READ RECORD without SELECT response: {response.hex()}, Status: {sw.hex()}")
     
 test_process_tpdu()
 
-
-
-
-
+# EOF

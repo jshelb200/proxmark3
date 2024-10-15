@@ -48,31 +48,31 @@
 // *   TR0 - 32 ETU's maximum for ATQB only
 // *   TR0 - FWT for all other commands
 
-// TR0 max is 159 µS or 32 samples from FPGA
-// 16 ETU * 9.4395 µS == 151 µS
+// TR0 max is 159 ï¿½S or 32 samples from FPGA
+// 16 ETU * 9.4395 ï¿½S == 151 ï¿½S
 // 16 * 8 = 128 sub carrier cycles,
 // 128 / 4 = 32 I/Q pairs.
 // since 1 I/Q pair after 4 subcarrier cycles at 848kHz subcarrier
 #endif
 
-// 8 ETU = 75 µS == 256 SSP_CLK
+// 8 ETU = 75 ï¿½S == 256 SSP_CLK
 #ifndef ISO14B_TR0_MIN
 # define ISO14B_TR0_MIN HF14_ETU_TO_SSP(8)
 #endif
 
 // Synchronization time (per 14443-2) in ETU
-// 16 ETU = 151 µS == 512 SSP_CLK
+// 16 ETU = 151 ï¿½S == 512 SSP_CLK
 #ifndef ISO14B_TR1_MIN
 # define ISO14B_TR1_MIN HF14_ETU_TO_SSP(16)
 #endif
 // Synchronization time (per 14443-2) in ETU
-// 25 ETU == 236 µS == 800 SSP_CLK
+// 25 ETU == 236 ï¿½S == 800 SSP_CLK
 #ifndef ISO14B_TR1_MAX
 # define ISO14B_TR1 HF14_ETU_TO_SSP(25)
 #endif
 
 // Frame Delay Time PICC to PCD  (per 14443-3 Amendment 1) in ETU
-// 14 ETU == 132 µS == 448 SSP_CLK
+// 14 ETU == 132 ï¿½S == 448 SSP_CLK
 #ifndef ISO14B_TR2
 # define ISO14B_TR2 HF14_ETU_TO_SSP(14)
 #endif
@@ -96,26 +96,26 @@ static void add_pcb_generic(pycliresp_t * entry, uint8_t* received_frame, size_t
     IblockType iblock_type = analyzeIBlock(received_frame);
 
     if (iblock_type == NS_0) {
-        // Trame reçue commence par 0x02, ajouter 0x02 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x02, ajouter 0x02 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->len);
         entry->data[0] = 0x02;
         entry->len++;
     }
     else if (iblock_type == NS_1) {
-        // Trame reçue commence par 0x03, ajouter 0x03 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x03, ajouter 0x03 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->len);
         entry->data[0] = 0x03;
         entry->len++;
 
     }
     else if (iblock_type == WUPB) {
-        // Trame reçue commence par 0x05, ajouter 0x05 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x05, ajouter 0x05 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->len);
         entry->data[0] = 0x50;
         entry->len++;
     }
     else {
-        // Trame reçue ne commence ni par 0x02 ni par 0x03, gestion d'erreur
+        // Trame reï¿½ue ne commence ni par 0x02 ni par 0x03, gestion d'erreur
         Dbprintf("Attention : Iblock non identifie .\n");
     }
     for (int i = 0; i < entry->len; i++) {
@@ -176,18 +176,18 @@ static void Uart14bInit(uint8_t* data) {
 // ptr tpour les reponses recues
 
 
-// Fonction pour convertir un octet en sa représentation hexadécimale dans une chaîne
+// Fonction pour convertir un octet en sa reprï¿½sentation hexadï¿½cimale dans une chaï¿½ne
 static void byte_to_hex(uint8_t byte, char* hex) {
     static const char hex_digits[] = "0123456789ABCDEF";
     hex[0] = hex_digits[(byte >> 4) & 0xF];
     hex[1] = hex_digits[byte & 0xF];
-    hex[2] = ' ';  // Ajouter un espace entre chaque octet hexadécimal
+    hex[2] = ' ';  // Ajouter un espace entre chaque octet hexadï¿½cimal
 }
 
-// Pour envoyer des données au thread du client python..
+// Pour envoyer des donnï¿½es au thread du client python..
 static void SendToPyCli(const uint8_t* data, size_t length) {
     if (length > PYCLIENT_MAX_MSG_SIZE) {
-        length = PYCLIENT_MAX_MSG_SIZE;  // S'assurer que la longueur ne dépasse pas la taille maximale
+        length = PYCLIENT_MAX_MSG_SIZE;  // S'assurer que la longueur ne dï¿½passe pas la taille maximale
     }
     char output[PYCLIENT_MAX_MSG_SIZE * 2 + 1] = { 0 };
     size_t index = 0;
@@ -217,14 +217,18 @@ int notify_middleware(PacketCommandNG* packet, uint8_t * receivedcmd, size_t cmd
     return 0;
 }
 
-// Mini packetReceived juste pour gerer les données recu du pyclient lors de la simulation.
+// Mini packetReceived juste pour gerer les donnï¿½es recu du pyclient lors de la simulation.
 static void PyCliPacketReceived(PacketCommandNG* packet, uint8_t* receivedcmd, size_t cmdlen) {
 
     switch (packet->cmd) {
-    case CMD_BREAK_LOOP:
+    case CMD_BREAK_LOOP:{
+        Dbprintf("CMD_BREAK_LOOP\n");
+        WaitUS(10);
         break;
+    }
+
     case CMD_PY_CLIENT_DATA: {
-        // Afficher les données reçues pour débogage
+        // Afficher les donnï¿½es reï¿½ues pour dï¿½bogage
         Dbprintf("Data Received: ");
         for (int i = 0; i < packet->length; i++) {
             Dbprintf("%02X ", packet->data.asBytes[i]);
@@ -251,27 +255,27 @@ static void process_and_send_frame(CalypsoFrame* frame, uint8_t* receivedCmd, si
 
     if (frame->crc_added == false) {
 
-        // Ajouter CRC et mettre à jour la trame
+        // Ajouter CRC et mettre ï¿½ jour la trame
         add_crc_and_update_trame(frame);
     }
 
-    // Encoder les données selon ISO 14443b
+    // Encoder les donnï¿½es selon ISO 14443b
     CodeIso14443bAsTag(frame->data, frame->dataSize);
 
-    // Allouer de la mémoire pour les données encodées
+    // Allouer de la mï¿½moire pour les donnï¿½es encodï¿½es
     tosend_t* ts = get_tosend();
     frame->encodedData = BigBuf_malloc(ts->max);
     if (frame->encodedData == NULL) {
-        Dbprintf("Erreur : Impossible d'allouer de la mémoire pour les données encodées.\n");
+        Dbprintf("Erreur : Impossible d'allouer de la mï¿½moire pour les donnï¿½es encodï¿½es.\n");
         return;
     }
     frame->encodedDataLen = ts->max;
     memcpy(frame->encodedData, ts->buf, ts->max);
 
-    // Transmettre les données encodées
+    // Transmettre les donnï¿½es encodï¿½es
     TransmitFor14443b_AsTag(frame->encodedData, frame->encodedDataLen);
 
-    // Libérer la mémoire allouée
+    // Libï¿½rer la mï¿½moire allouï¿½e
     BigBuf_free();
 
     uint64_t eof_time = GetCountUS();
@@ -323,7 +327,7 @@ void handlePyClientSim(uint8_t* pupi) {
     // response to ATQB sans CRC (On le calcule nous meme)
 
     uint8_t respATQB[] = {
-        0x50,                       // Code de réponse ATQB
+        0x50,                       // Code de rï¿½ponse ATQB
         0x00, 0x00, 0x00, 0x00,     // PUPI/UID / Place holder for UID
         0x00, 0x00, 0x00, 0x00,	   // Application data
         0x00,                      // Bit rate capacity 
@@ -381,7 +385,6 @@ void handlePyClientSim(uint8_t* pupi) {
     }
 
     BigBuf_free();
-
 
     StartCountUS();
     uint32_t eof_time = 0; // pour les logs
@@ -464,6 +467,7 @@ void handlePyClientSim(uint8_t* pupi) {
         }
 
 
+
         /*
         * How should this flow go?
         *  REQB or WUPB
@@ -473,6 +477,7 @@ void handlePyClientSim(uint8_t* pupi) {
         *  HALT
             send halt response ( waiting for wupb )
         */
+
 
         switch (cardSTATE) {
 
@@ -526,9 +531,7 @@ void handlePyClientSim(uint8_t* pupi) {
             sow_time = GetCountUS();
             sof_time = GetCountUS();
             eow_time = GetCountUS();
-            while ((eow_time - sow_time) < (2 * 1000000) || BUTTON_PRESS() == false ) {   // On attend 2 secondes pour voir si on recoit une reponse du client python
-                //WaitUS(100);
-                eow_time = GetCountUS();
+            while ((eow_time - sow_time) < ( 3 * 1000000) || BUTTON_PRESS() == false ) {   // On attend 2 secondes pour voir si on recoit une reponse du client python
                 // Check if there is a packet available
                 PacketCommandNG rx;
                 memset(&rx.data, 0, sizeof(rx.data));
@@ -540,6 +543,8 @@ void handlePyClientSim(uint8_t* pupi) {
                     Dbprintf("Error in data reception from pyclient : %d %s", ret, (ret == PM3_EIO) ? "PM3_EIO" : "");
                     // TODO if error, shall we resync ?
                 }
+                WaitUS(1000);
+                eow_time = GetCountUS();
 
             }
             if (pyresp.ok) {
@@ -594,10 +599,6 @@ void handlePyClientSim(uint8_t* pupi) {
         BigBuf_free();
     }
 }
-
-
-
-
 
 /*
 void SendToPyCli(const char* fmt, ...) {

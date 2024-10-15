@@ -1,0 +1,9 @@
+0200A40000023F04008A32
+
+    02 → C-APDU (Command APDU, CLA byte).
+    00 → INS byte (Instruction, SELECT dans ce cas).
+    A4 → Instruction code (SELECT FILE).
+    00 00 → P1/P2 (parameters).
+    02 → Lc (length of the data).
+    3F04 → Data (AID or file ID in this case).
+    00 8A32 → Le + CRC (expected length, checks, or control field).
