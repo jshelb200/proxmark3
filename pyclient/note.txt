@@ -7,3 +7,62 @@
     02 → Lc (length of the data).
     3F04 → Data (AID or file ID in this case).
     00 8A32 → Le + CRC (expected length, checks, or control field).
+
+Calypso Routine
+
+        {"01.Select ICC file",     "\x94\xa4\x08\x00\x04\x3f\x00\x00\x02", 9}, // 94 A4 08 00 04 3F 00 00 02
+        {"02.ICC",                 "\x94\xb2\x01\x04\x1d", 5},
+        {"03.Select EnvHol file",  "\x94\xa4\x08\x00\x04\x20\x00\x20\x01", 9},
+        {"04.EnvHol1",             "\x94\xb2\x01\x04\x1d", 5},
+        {"05.Select EvLog file",   "\x94\xa4\x08\x00\x04\x20\x00\x20\x10", 9},
+        {"06.EvLog1",              "\x94\xb2\x01\x04\x1d", 5},
+        {"07.EvLog2",              "\x94\xb2\x02\x04\x1d", 5},
+        {"08.EvLog3",              "\x94\xb2\x03\x04\x1d", 5},
+        {"09.Select ConList file", "\x94\xa4\x08\x00\x04\x20\x00\x20\x50", 9},
+        {"10.ConList",             "\x94\xb2\x01\x04\x1d", 5},
+        {"11.Select Contra file",  "\x94\xa4\x08\x00\x04\x20\x00\x20\x20", 9},
+        {"12.Contra1",             "\x94\xb2\x01\x04\x1d", 5},
+        {"13.Contra2",             "\x94\xb2\x02\x04\x1d", 5},
+        {"14.Contra3",             "\x94\xb2\x03\x04\x1d", 5},
+        {"15.Contra4",             "\x94\xb2\x04\x04\x1d", 5},
+        {"16.Select Counter file", "\x94\xa4\x08\x00\x04\x20\x00\x20\x69", 9},
+        {"17.Counter",             "\x94\xb2\x01\x04\x1d", 5},
+        {"18.Select SpecEv file",  "\x94\xa4\x08\x00\x04\x20\x00\x20\x40", 9},
+        {"19.SpecEv1",             "\x94\xb2\x01\x04\x1d", 5},
+    };
+
+    /*
+    local CLA = '94'
+    local _calypso_cmds = {
+
+    -- Break down of command bytes:
+    --  A4 = select
+    --  Master File  3F00
+    --  0x3F = master file
+    --  0x00 = master file id, is constant to 0x00.
+
+    --  DF Dedicated File  38nn
+    --  can be seen as directories
+    --  0x38
+    --  0xNN  id
+    --  ["01.Select ICC file"] = '0294 a4 080004 3f00 0002',
+
+    --  EF Elementary File
+    --  EF1 Pin file
+    --  EF2 Key file
+    --  Grey Lock file
+    --  Electronic deposit file
+    --  Electronic Purse file
+    --  Electronic Transaction log file
+    */
+
+
+    ??????
+    Sniff Cardpeek MF 
+       36110080 |   36113196 | Rdr |03  94  A4  00  00  02  3F  04  00  33  F9                               |  ok |  AID 3F04
+    
+    Proxmark hf 14b calypso file
+        MF : 94 A4 08 00 04 3F 00 00 02
+        FCI : [02]85170204021D011F00000001010101000000000000000000009000[7725]
+
+    

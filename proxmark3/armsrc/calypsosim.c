@@ -41,31 +41,31 @@
 // *   TR0 - 32 ETU's maximum for ATQB only
 // *   TR0 - FWT for all other commands
 
-// TR0 max is 159 µS or 32 samples from FPGA
-// 16 ETU * 9.4395 µS == 151 µS
+// TR0 max is 159 ï¿½S or 32 samples from FPGA
+// 16 ETU * 9.4395 ï¿½S == 151 ï¿½S
 // 16 * 8 = 128 sub carrier cycles,
 // 128 / 4 = 32 I/Q pairs.
 // since 1 I/Q pair after 4 subcarrier cycles at 848kHz subcarrier
 #endif
 
-// 8 ETU = 75 µS == 256 SSP_CLK
+// 8 ETU = 75 ï¿½S == 256 SSP_CLK
 #ifndef ISO14B_TR0_MIN
 # define ISO14B_TR0_MIN HF14_ETU_TO_SSP(8)
 #endif
 
 // Synchronization time (per 14443-2) in ETU
-// 16 ETU = 151 µS == 512 SSP_CLK
+// 16 ETU = 151 ï¿½S == 512 SSP_CLK
 #ifndef ISO14B_TR1_MIN
 # define ISO14B_TR1_MIN HF14_ETU_TO_SSP(16)
 #endif
 // Synchronization time (per 14443-2) in ETU
-// 25 ETU == 236 µS == 800 SSP_CLK
+// 25 ETU == 236 ï¿½S == 800 SSP_CLK
 #ifndef ISO14B_TR1_MAX
 # define ISO14B_TR1 HF14_ETU_TO_SSP(25)
 #endif
 
 // Frame Delay Time PICC to PCD  (per 14443-3 Amendment 1) in ETU
-// 14 ETU == 132 µS == 448 SSP_CLK
+// 14 ETU == 132 ï¿½S == 448 SSP_CLK
 #ifndef ISO14B_TR2
 # define ISO14B_TR2 HF14_ETU_TO_SSP(14)
 #endif
@@ -115,13 +115,13 @@ static void Uart14bInit(uint8_t* data) {
 
 
 // Pour la synchronisation
-static int lastState = -1; // Pour suivre l'etat précédent de la carte
+static int lastState = -1; // Pour suivre l'etat prï¿½cï¿½dent de la carte
 
 
 static WTXFrame create_WTX_command(uint8_t wtxm) {
     WTXFrame wtx_command;
 
-    // Vérifier que la durée est comprise entre 1 et 59 ms
+    // Vï¿½rifier que la durï¿½e est comprise entre 1 et 59 ms
     if (wtxm < 1) {
         wtxm = 1;
     }
@@ -131,14 +131,14 @@ static WTXFrame create_WTX_command(uint8_t wtxm) {
 
     // Construire la commande WTX
     wtx_command.pcb = 0xF2; // PCB pour une commande S(WTX)
-    wtx_command.wtxm = (0x00 << 6) | (wtxm & 0x3F); // WTXM avec les bits réservés à 00 et les bits WTXM (b6-b1)
+    wtx_command.wtxm = (0x00 << 6) | (wtxm & 0x3F); // WTXM avec les bits rï¿½servï¿½s ï¿½ 00 et les bits WTXM (b6-b1)
 
     return wtx_command;
 }
 
-// Fonction pour ajouter le CRC à une commande WTX et créer une trame complète
+// Fonction pour ajouter le CRC ï¿½ une commande WTX et crï¿½er une trame complï¿½te
 void create_WTX_command_with_crc(uint8_t duration_ms, uint8_t* frame, size_t* frame_size) {
-    // Créer la commande WTX
+    // Crï¿½er la commande WTX
     WTXFrame wtx_command = create_WTX_command(duration_ms);
 
     // Initialiser la trame avec PCB et WTXM
@@ -153,7 +153,7 @@ void create_WTX_command_with_crc(uint8_t duration_ms, uint8_t* frame, size_t* fr
     // Calculer le CRC sur tous les octets sauf les deux derniers
     AddCrc14B(frame, *frame_size - 2);
 
-    // La taille de la trame finale est déjà mise à jour avec l'ajout du CRC
+    // La taille de la trame finale est dï¿½jï¿½ mise ï¿½ jour avec l'ajout du CRC
 }
 
 void print_frame(uint8_t* frame, size_t frame_size) {
@@ -182,42 +182,42 @@ IblockType analyzeIBlock(uint8_t* frame) {
 
 
 
-// Ajout du pcb à la trame à envoyer en fonction de l'I-Block reçu
+// Ajout du pcb ï¿½ la trame ï¿½ envoyer en fonction de l'I-Block reï¿½u
 
 void add_pcb(CalypsoFrame* entry, uint8_t* received_frame, size_t received_frame_size) {
-    // Vérifiez si le PCB a déjà été ajouté
+    // Vï¿½rifiez si le PCB a dï¿½jï¿½ ï¿½tï¿½ ajoutï¿½
     if (entry->pcb_added) {
-        return; // Si le PCB a déjà été ajouté, ne rien faire
+        return; // Si le PCB a dï¿½jï¿½ ï¿½tï¿½ ajoutï¿½, ne rien faire
     }
 
     IblockType iblock_type = analyzeIBlock(received_frame);
 
     if (iblock_type == NS_0) {
-        // Trame reçue commence par 0x02, ajouter 0x02 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x02, ajouter 0x02 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->dataSize);
         entry->data[0] = 0x02;
         entry->dataSize++;
     }
     else if (iblock_type == NS_1) {
-        // Trame reçue commence par 0x03, ajouter 0x03 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x03, ajouter 0x03 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->dataSize);
         entry->data[0] = 0x03;
         entry->dataSize++;
 
     }
     else if (iblock_type == WUPB) {
-        // Trame reçue commence par 0x05, ajouter 0x05 au début de la trame à envoyer
+        // Trame reï¿½ue commence par 0x05, ajouter 0x05 au dï¿½but de la trame ï¿½ envoyer
         memmove(entry->data + 1, entry->data, entry->dataSize);
         entry->data[0] = 0x50;
         entry->dataSize++;
     }
     else {
-        // Trame reçue ne commence ni par 0x02 ni par 0x03, gestion d'erreur
+        // Trame reï¿½ue ne commence ni par 0x02 ni par 0x03, gestion d'erreur
         //Dbprintf("Attention : ATS Iblock non identifie .\n");
 
     }
 
-    // Marquer que le PCB a été ajouté
+    // Marquer que le PCB a ï¿½tï¿½ ajoutï¿½
     entry->pcb_added = true;
     return;
 }
@@ -235,7 +235,7 @@ void add_crc_and_update_trame(CalypsoFrame* entry) {
     // Calculer le CRC sur tous les octets sauf les deux derniers
     AddCrc14B(entry->data, entry->dataSize - 2);
 
-    // Marquer que le CRC a été ajouté
+    // Marquer que le CRC a ï¿½tï¿½ ajoutï¿½
     entry->crc_added = true;
     return;
 }
@@ -261,27 +261,27 @@ static void process_and_send_frame(CalypsoFrame* frame, uint8_t* receivedCmd, si
 
     if (frame->crc_added == false) {
 
-        // Ajouter CRC et mettre à jour la trame
+        // Ajouter CRC et mettre ï¿½ jour la trame
         add_crc_and_update_trame(frame);
     }
 
-    // Encoder les données selon ISO 14443b
+    // Encoder les donnï¿½es selon ISO 14443b
     CodeIso14443bAsTag(frame->data, frame->dataSize);
 
-    // Allouer de la mémoire pour les données encodées
+    // Allouer de la mï¿½moire pour les donnï¿½es encodï¿½es
     tosend_t* ts = get_tosend();
     frame->encodedData = BigBuf_malloc(ts->max);
     if (frame->encodedData == NULL) {
-        Dbprintf("Erreur : Impossible d'allouer de la mémoire pour les données encodées.\n");
+        Dbprintf("Erreur : Impossible d'allouer de la mï¿½moire pour les donnï¿½es encodï¿½es.\n");
         return;
     }
     frame->encodedDataLen = ts->max;
     memcpy(frame->encodedData, ts->buf, ts->max);
 
-    // Transmettre les données encodées
+    // Transmettre les donnï¿½es encodï¿½es
     TransmitFor14443b_AsTag(frame->encodedData, frame->encodedDataLen);
 
-    // Libérer la mémoire allouée
+    // Libï¿½rer la mï¿½moire allouï¿½e
     BigBuf_free();
 
     uint64_t eof_time = GetCountUS();
@@ -294,7 +294,7 @@ static void process_and_send_frame(CalypsoFrame* frame, uint8_t* receivedCmd, si
 
 void SimulateCalypsoTag(const uint8_t* pupi) {
 
-    // uint32_t fwt = 0; // Pour un test sur le temps de réponse en vue de trouver la bonne valeur de FWT
+    // uint32_t fwt = 0; // Pour un test sur le temps de rï¿½ponse en vue de trouver la bonne valeur de FWT
 
 
     LED_A_ON();
@@ -337,7 +337,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
     // response to ATQB sans CRC (On le calcule nous meme)
 
     uint8_t respATQB[] = {
-        0x50,                       // Code de réponse ATQB
+        0x50,                       // Code de rï¿½ponse ATQB
         0x00, 0x00, 0x00, 0x00,     // PUPI/UID / Place holder for UID
         0x00, 0x00, 0x00, 0x00,	   // Application data
         0x00,                      // Bit rate capacity
@@ -452,7 +452,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
     BigBuf_free();
     StartCountUS();
 
-    // Données de synchronisation
+    // Donnï¿½es de synchronisation
     uint32_t eof_time = 0;
     uint32_t sof_time = 0;
     uint8_t state = 0;
@@ -465,7 +465,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
         WDT_HIT();
         //   Dbprintf("state : %d", *data_ptr);
 
-        uint8_t* prev_cmd = 0; // Pour suivre la dernière commande reçue cmd -1
+        uint8_t* prev_cmd = 0; // Pour suivre la derniï¿½re commande reï¿½ue cmd -1
 
         if (data_available()) {
             Dbprintf("Data available");
@@ -497,8 +497,8 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
 				}
 				if (len == 4 && receivedCmd[0] == WTX_PCB) {
 					LogTrace(receivedCmd, len, (sof_time), (eof_time), NULL, true);
-                    jetons = true; // On a reçu un jeton (ack de wtx par PCD)
-                    cardSTATE = SIMCAL_IDLE; // On revient à l'état idle
+                    jetons = true; // On a reï¿½u un jeton (ack de wtx par PCD)
+                    cardSTATE = SIMCAL_IDLE; // On revient ï¿½ l'ï¿½tat idle
 					continue;
 				}
 
@@ -520,7 +520,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
         // Control automatic the FWT
         /*
         if (receivedCmd[0] == CALYPSO_ATTRIB) {
-            Dbprintf("FWT ideal trouvé : %d", fwt);
+            Dbprintf("FWT ideal trouvï¿½ : %d", fwt);
         }
         else
         {
@@ -684,7 +684,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
             Send_WTX(calypso_REQ[0].encodedData, calypso_REQ[0].encodedDataLen, REQ_WTX, sizeof(REQ_WTX), SIMCAL_WIN_APP);
             cardSTATE = HANDLE_WTX;
             // process_and_send_frame(&calypso_RESP[3], receivedCmd, len);
-            active = true; // la carte est activée
+            active = true; // la carte est activï¿½e
             break;
         }
         case SIMCAL_GET_DATA: {
@@ -746,7 +746,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
 
         case SIMCAL_READ_RECORD: {
             // Vu que la comd pour lire un fichier apres l'ATS est la meme que pour les autres, je vais mettre un suivi state pour les differencier
-            if (*data_ptr == FIRST_DATA) { // Premier donnée de l'application AID_3F04
+            if (*data_ptr == FIRST_DATA) { // Premier donnï¿½e de l'application AID_3F04
                 Send_WTX(calypso_REQ[0].encodedData, calypso_REQ[0].encodedDataLen, REQ_WTX, sizeof(REQ_WTX), SIMCAL_READ_RECORD);
                 //process_and_send_frame(&calypso_RESP[6], receivedCmd, len);
                 *data_ptr = NO_DATA;
@@ -764,7 +764,7 @@ void SimulateCalypsoTag(const uint8_t* pupi) {
                 break;
             }
 
-            // Si on a pas de donnée a lire cela signifie qu'il faudra remttre state a 0 a chaque fin de lecture des données
+            // Si on a pas de donnï¿½e a lire cela signifie qu'il faudra remttre state a 0 a chaque fin de lecture des donnï¿½es
             else if (*data_ptr == NO_DATA) {
                 process_and_send_frame(&calypso_RESP[9], receivedCmd, len);
                 break;
@@ -877,7 +877,7 @@ void InitCalypso(const uint8_t* pupi) {
     // response to ATQB sans CRC (On le calcule nous meme)
 
     uint8_t respATQB[] = {
-        0x50,                       // Code de réponse ATQB
+        0x50,                       // Code de rï¿½ponse ATQB
         0x00, 0x00, 0x00, 0x00,     // PUPI/UID / Place holder for UID
         0x00, 0x00, 0x00, 0x00,	   // Application data
         0x00,                      // Bit rate capacity

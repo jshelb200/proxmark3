@@ -1,18 +1,18 @@
 // States for CALYPSO SIM command
 
-#define SIMCAL_NOFIELD      0  // État lorsque aucun champ RF n'est détecté
-#define SIMCAL_IDLE         1  // État d'inactivité où le système est prêt à communiquer mais aucune activité spécifique n'est en cours
-#define SIMCAL_HALTED       2  // État où la communication est suspendue ou arrêtée
-#define SIMCAL_SELECTING    3  // État où le lecteur envoie une commande REQB à la carte pour initier la communication
-#define SIMCAL_HALTING      4  // État où la carte répond à la commande REQB avec un message ATQB
-#define SIMCAL_ACKNOWLEDGE  5  // État où la carte envoie une réponse à une commande ATTRIB du lecteur
-#define SIMCAL_WORK		    6  // État où la carte est activement engagée dans la communication avec le lecteur
-#define SIMCAL_WIN_APP	    8  // Etape 1 de l'échange de données
-#define SIMCAL_GET_DATA	    9  // Etape 2 de l'échange de données
-#define SIMCAL_EXC		    10 // Etape 3 de l'échange de données
-#define SIMCAL_EXD		    11 // Etape 4 de l'échange de données
-#define SIMCAL_EXE		    12 // Etape 5 de l'échange de données
-#define SIMCAL_READ_REC_MUL 13 // Etape 6 de l'échange de données
+#define SIMCAL_NOFIELD      0  // ï¿½tat lorsque aucun champ RF n'est dï¿½tectï¿½
+#define SIMCAL_IDLE         1  // ï¿½tat d'inactivitï¿½ oï¿½ le systï¿½me est prï¿½t ï¿½ communiquer mais aucune activitï¿½ spï¿½cifique n'est en cours
+#define SIMCAL_HALTED       2  // ï¿½tat oï¿½ la communication est suspendue ou arrï¿½tï¿½e
+#define SIMCAL_SELECTING    3  // ï¿½tat oï¿½ le lecteur envoie une commande REQB ï¿½ la carte pour initier la communication
+#define SIMCAL_HALTING      4  // ï¿½tat oï¿½ la carte rï¿½pond ï¿½ la commande REQB avec un message ATQB
+#define SIMCAL_ACKNOWLEDGE  5  // ï¿½tat oï¿½ la carte envoie une rï¿½ponse ï¿½ une commande ATTRIB du lecteur
+#define SIMCAL_WORK		    6  // ï¿½tat oï¿½ la carte est activement engagï¿½e dans la communication avec le lecteur
+#define SIMCAL_WIN_APP	    8  // Etape 1 de l'ï¿½change de donnï¿½es
+#define SIMCAL_GET_DATA	    9  // Etape 2 de l'ï¿½change de donnï¿½es
+#define SIMCAL_EXC		    10 // Etape 3 de l'ï¿½change de donnï¿½es
+#define SIMCAL_EXD		    11 // Etape 4 de l'ï¿½change de donnï¿½es
+#define SIMCAL_EXE		    12 // Etape 5 de l'ï¿½change de donnï¿½es
+#define SIMCAL_READ_REC_MUL 13 // Etape 6 de l'ï¿½change de donnï¿½es
 
 
 
@@ -85,7 +85,7 @@
 
 
 
-// les etats associés a chaque commandes
+// les etats associï¿½s a chaque commandes
 #define SIMCAL_INIT                     14
 #define SIMCAL_AID_3F04                 15
 #define SIMCAL_ICC_0002                 16
@@ -129,7 +129,7 @@ typedef struct {
     uint8_t wtxm;
 } WTXFrame;
 
-// Les type de Iblock supportés
+// Les type de Iblock supportï¿½s
 typedef enum {
     NS_0,
     NS_1,

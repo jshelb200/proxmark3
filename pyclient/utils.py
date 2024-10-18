@@ -51,7 +51,8 @@ def pmfw_print(data):
     # Add space in data xx xx xx xx if num in data
      #   data = ' '.join(data[i:i+2] for i in range(0, len(data), 2))
     print(f"{Fore.CYAN}[+] {Style.RESET_ALL}{data}")             
-        
+
+
 def compute_crc(data):
     # Necessaire ?
     crc = 0
@@ -64,6 +65,13 @@ def bytes_to_hex_string(data):
         return ' '.join(f'{byte:02X}' for byte in data)
     raise ValueError("Data must be bytes or bytearray")
     
+def is_hex(s):
+    """Vérifie si la chaîne ne contient que des caractères hexadécimaux."""
+    try:
+        int(s, 16)
+        return True
+    except ValueError:
+        return False
 
 def stylized_banner(port):
     logs_dir = 'logs'

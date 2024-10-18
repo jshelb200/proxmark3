@@ -20,7 +20,7 @@ from re import T
 import serial
 import threading
 import argparse
-from utils import Debug, pmfw_print, stylized_banner, bytes_to_hex_string
+from utils import Debug, pmfw_print, stylized_banner, bytes_to_hex_string, is_hex
 from colorama import init, Fore, Style
 import struct
 import sys
@@ -43,7 +43,6 @@ TX_COMMANDNG_PREAMBLE_MAGIC_PY = b"Pym3"
 TX_COMMANDNG_POSTAMBLE_MAGIC_PY = b"a3"
 
 # Pour la simulation
-Iblock = {"02", "03"}
 Reader = bytes_to_hex_string(b'\x03\x00\xCA\x7F\x68\x00\x0F\x7D')
 #pm = b'\x6B\x00' #Incorrect parameters (P1,P2)
 received_queue = queue.Queue()
@@ -133,9 +132,9 @@ def open_proxmark(dev, port, wait_for_port, timeout, flash_mode, speed, print_ou
 
 def send_command(serial_port, cmd, data):
     if cmd == CMD_PY_CLIENT_DATA :
-        print(f"Envoi d'une donnée : {data}")  # Afficher en hexadécimal
+        print(f"Envoi de donnée : {data}")  # Afficher en hexadécimal
     else:
-        print(f"Envoi d'une commande : {cmd}")
+        print(f"Envoi de commande : {cmd}")
 
     # Préparation des données
     cmd_bytes = struct.pack('<H', cmd)
@@ -169,8 +168,10 @@ def main():
     banner = stylized_banner({port})
     print(banner)
     
-    card = CalypsoCard(serial_number="DDCCBBAA")
-    aid = b'\x3F\x04'
+    # Création de la carte Calypso
+    uid = b'\xDD\xCC\xBB\xAA'
+    card = CalypsoCard(uid=uid)
+    aid = b'\x3F\x00'
     card.create_application(aid)
     record_1 = bytes.fromhex("DDDDDDDDDDDD")
     record_2 = bytes.fromhex("CCCCCCCCCCCC") 
@@ -194,26 +195,24 @@ def main():
                          ):
             print("Proxmark3 ouvert et communication démarrée.")
             print("Envoi de la commande CMD_PY_CLIENT_SIM...")
-            uid = b'\xDD\xCC\xBB\xAA'
+            receivedCmd = None
             send_command(proxmark_device.serial_port, CMD_PY_CLIENT_SIM, uid)
             # Emulation loop
             while proxmark_device.run:
                 try:
                     received = received_queue.get_nowait() 
-                    if received[:2] in Iblock : # Si la commande reçue est un bloc I (02 ou 03) 
-                        #iblock_cmd = receivedCmd
-                        print (f"\n{Fore.GREEN}## Init OK ##{Style.RESET_ALL}\n")
-                        print(f"C-APDU: {received}")
-                        time.sleep(0.1)
-                        # convert receivedCmd to bytes
+                    #time.sleep(0.1)
+
+                    if is_hex(received):
                         receivedCmd = bytes.fromhex(received)
-                        print(f"CAPDU : {receivedCmd}")
                         response, sw = process_tpdu(card, receivedCmd)
-                        print(f"RAPDU : (response: {response}, status word: {sw})")
-                        send_data(proxmark_device.serial_port, response + sw) 
+                        if response != b'' and sw != b'':
+                            send_data(proxmark_device.serial_port, response + sw) 
+                    else:
+                        pass
                 except queue.Empty:
                     pass  # Do nothing if the queue is empty
-                time.sleep(0.1)
+                time.sleep(0.2)
         else:
             debug.error("Échec de l'ouverture de Proxmark3.")
             
